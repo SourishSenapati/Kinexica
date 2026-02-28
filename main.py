@@ -10,6 +10,7 @@ import threading
 
 import pandas as pd
 from fastapi import BackgroundTasks, FastAPI
+from pydantic import BaseModel
 from sqlalchemy import Column, Float, Integer, String, create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
@@ -25,7 +26,11 @@ SESSION_LOCAL = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 # --- WEB3 PARAMETRIC INSURANCE ORACLE (LOCAL GANache BINDING) ---
-CONTRACT_ADDRESS = "0xF2E246BB76DF876Cef8b38ae84130F4F55De395b"
+# [USER INSTRUCTION]: Open your Ganache GUI so it is running live on 127.0.0.1:7545.
+# Open Remix IDE in your browser, connect it to your Local Web3 Provider (port 7545),
+# paste your KinexicaAsset.sol code, and hit Deploy.
+# Copy the actual contract address Remix gives you and paste it explicitly below.
+CONTRACT_ADDRESS = "PASTE_YOUR_REMIX_CONTRACT_ADDRESS_HERE"
 
 
 class AssetRecord(Base):  # pylint: disable=too-few-public-methods
@@ -197,6 +202,30 @@ def get_asset_state(asset_id: str):
             "block_number": asset.block_number
         }
     return {"error": "Asset not found in the local FOSS db."}
+
+
+@app.post("/sensor-ingest")
+def ingest_sensor_data(payload: dict):
+    """
+    Ingest live telemetry from Arduino sensors, padding CV visual data 
+    if not provided by an Edge camera.
+    """
+    from pinn_engine.inference import run_inference
+
+    cv_variance = payload.get("cv_variance", 1000.0)  # Safe baseline
+    cv_intensity = payload.get("cv_intensity", 150.0)  # Safe baseline
+
+    tensor_input = [
+        payload.get("temp", 0.0),
+        payload.get("humidity", 0.0),
+        payload.get("ethylene", 0.0),
+        cv_variance,
+        cv_intensity
+    ]
+
+    res = run_inference(*tensor_input)
+
+    return {"status": "success", "predicted_shelf_life": res["predicted_shelf_life_hours"]}
 
 
 if __name__ == "__main__":
