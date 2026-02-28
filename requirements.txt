@@ -1,0 +1,11 @@
+torch
+numpy
+pandas
+pydantic
+crewai
+langchain-community
+fastapi
+uvicorn
+flet
+sqlalchemy
+requests
