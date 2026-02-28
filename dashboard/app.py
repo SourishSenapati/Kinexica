@@ -50,9 +50,17 @@ def main(page: ft.Page):  # pylint: disable=too-many-statements,too-many-nested-
     status_text.size = 20
     status_text.weight = ft.FontWeight.BOLD
 
+    # Golden Blockchain Receipt text
+    # type: ignore # pylint: disable=too-many-function-args
+    tx_hash_text = ft.Text("")
+    tx_hash_text.size = 14
+    tx_hash_text.weight = ft.FontWeight.BOLD
+    tx_hash_text.color = ft.colors.YELLOW_200
+    tx_hash_text.visible = False
+
     col = ft.Column([asset_id_text, temp_text,
                      # type: ignore # pylint: disable=too-many-function-args
-                     ethylene_text, shelf_life_text, status_text])
+                     ethylene_text, shelf_life_text, status_text, tx_hash_text])
     col.alignment = ft.MainAxisAlignment.CENTER
 
     # type: ignore # pylint: disable=too-many-function-args
@@ -90,8 +98,18 @@ def main(page: ft.Page):  # pylint: disable=too-many-statements,too-many-nested-
                         if status == "Stable":
                             status_card.bgcolor = ft.colors.GREEN_700
                             is_flashing = False
+                            tx_hash_text.visible = False
+
+                        elif status == "Liquidated" and data.get("tx_hash"):
+                            # Block-verified Immutable Drop
+                            status_card.bgcolor = ft.colors.AMBER_600
+                            is_flashing = False
+                            tx_hash_text.value = f"TxHash: {data['tx_hash'][:10]}... | Block: {data['block_number']}"
+                            tx_hash_text.visible = True
+                            status_text.value = "Status: IMMUTABLE CONTRACT SECURED"
+
                         elif status in ("Distressed", "Liquidated"):
-                            # Flashing Red Effect
+                            # Flashing Red Effect before transaction clears
                             is_flashing = not is_flashing
                             if is_flashing:
                                 status_card.bgcolor = ft.colors.RED_900

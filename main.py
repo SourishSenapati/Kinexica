@@ -35,6 +35,8 @@ class AssetRecord(Base):  # pylint: disable=too-few-public-methods
     ethylene_ppm = Column(Float)
     estimated_shelf_life_h = Column(Float)
     status = Column(String)  # "Stable" or "Distressed" or "Liquidated"
+    tx_hash = Column(String, nullable=True)
+    block_number = Column(Integer, nullable=True)
 
 
 Base.metadata.create_all(bind=engine)
@@ -186,7 +188,9 @@ def get_asset_state(asset_id: str):
             "current_temp_c": asset.current_temp_c,
             "ethylene_ppm": asset.ethylene_ppm,
             "estimated_shelf_life_h": asset.estimated_shelf_life_h,
-            "status": asset.status
+            "status": asset.status,
+            "tx_hash": asset.tx_hash,
+            "block_number": asset.block_number
         }
     return {"error": "Asset not found in the local FOSS db."}
 

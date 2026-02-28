@@ -9,3 +9,6 @@ uvicorn
 flet
 sqlalchemy
 requests
+web3
+py-solc-x
+eth-tester[py-evm]

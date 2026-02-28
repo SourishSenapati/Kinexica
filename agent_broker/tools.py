@@ -3,7 +3,9 @@ Tools for the agent broker.
 """
 
 import os
+import sqlite3
 from crewai.tools import tool
+from blockchain.deploy import deploy_kinexica_contract
 
 
 @tool("Save Smart Contract to Ledger")
@@ -32,3 +34,31 @@ def broadcast_webhook(payload_summary: str) -> str:
     """
     print(f"\n[NETWORK] Broadcasting Webhook: {payload_summary}")
     return "Webhook broadcast successful. Stakeholders notified."
+
+
+@tool("Mint Immutable Smart Contract")
+def mint_smart_contract(asset_id: str, temp: float, ethylene: float, hours: float, price: float) -> str:
+    """
+    Deploys a cryptographically secure proof-of-kinetics verification smart contract 
+    to the local offline Ethereum node (Ganache/Eth-Tester).
+    You MUST provide exactly: asset_id, temperature, ethylene ppm, remaining hours, and the negotiated liquidated price.
+    """
+    print(
+        f"\n[BLOCKCHAIN] Deploying Proof-of-Kinetics for {asset_id} at ${price}...")
+
+    h, b = deploy_kinexica_contract(asset_id, float(
+        temp), float(ethylene), float(hours), float(price))
+
+    # Update SQLite Database so UI is synced
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    db_path = os.path.join(base_dir, "inventory.db")
+
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+
+    cur.execute(
+        "UPDATE assets SET status='Liquidated', tx_hash=?, block_number=? WHERE asset_id=?", (h, b, asset_id))
+    conn.commit()
+    conn.close()
+
+    return f"Smart contract minted securely. TxHash: {h} Block: {b}"
