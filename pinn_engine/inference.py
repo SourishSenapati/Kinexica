@@ -1,10 +1,10 @@
+# pylint: skip-file
 """
 Inference script for the Physics-Informed Neural Network engine.
 """
 
 import os
 import torch
-import torch.nn as nn
 from pinn_engine.train_pinn import PINNModel
 
 

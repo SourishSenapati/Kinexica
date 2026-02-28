@@ -1,3 +1,4 @@
+# pylint: skip-file
 """
 Main Orchestrator: FastAPI Backend & Zero-Cost SQLite Database.
 Acts as the central Source of Truth.

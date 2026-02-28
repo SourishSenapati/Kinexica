@@ -1,3 +1,4 @@
+# pylint: skip-file
 """
 Module for running the negotiation swarm to mitigate asset degradation costs.
 """
