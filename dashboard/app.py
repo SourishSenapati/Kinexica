@@ -104,7 +104,10 @@ def main(page: ft.Page):  # pylint: disable=too-many-statements,too-many-nested-
                             # Block-verified Immutable Drop
                             status_card.bgcolor = ft.colors.AMBER_600
                             is_flashing = False
-                            tx_hash_text.value = f"TxHash: {data['tx_hash'][:10]}... | Block: {data['block_number']}"
+                            tx_hash_text.value = (
+                                f"TxHash: {data['tx_hash'][:10]}... | "
+                                f"Block: {data['block_number']}"
+                            )
                             tx_hash_text.visible = True
                             status_text.value = "Status: IMMUTABLE CONTRACT SECURED"
 

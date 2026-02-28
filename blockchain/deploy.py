@@ -1,15 +1,21 @@
+"""
+Smart Contract deployment logic implementation.
+"""
 import os
 import solcx
 from web3 import Web3
+from web3.providers.eth_tester import EthereumTesterProvider
 
 
-def deploy_kinexica_contract(asset_id: str, temp: float, ethylene: float, hours: float, price: float):
+def deploy_kinexica_contract(
+    asset_id: str, temp: float, ethylene: float, hours: float, price: float
+):
     """
     Simulates or deploys a smart contract directly to a local offline Ethereum node.
     """
     try:
         solcx.install_solc('0.8.19')
-    except Exception as e:
+    except solcx.exceptions.SolcInstallationError as e:
         print(f"Warning: solc install issue: {e}")
 
     solcx.set_solc_version('0.8.19')
@@ -27,6 +33,7 @@ def deploy_kinexica_contract(asset_id: str, temp: float, ethylene: float, hours:
     )
 
     contract_id, contract_interface = compiled_sol.popitem()
+    _ = contract_id  # Satisfy linters for this unused val
     abi = contract_interface['abi']
     bytecode = contract_interface['bin']
 
@@ -35,17 +42,16 @@ def deploy_kinexica_contract(asset_id: str, temp: float, ethylene: float, hours:
     if not w3.is_connected():
         print(
             "[BLOCKCHAIN] Ganache not detected natively. Booting EthereumTesterProvider...")
-        from web3.providers.eth_tester import EthereumTesterProvider
         w3 = Web3(EthereumTesterProvider())
     else:
         print("[BLOCKCHAIN] Ganache detected natively!")
 
     w3.eth.default_account = w3.eth.accounts[0]
 
-    KinexicaAsset = w3.eth.contract(abi=abi, bytecode=bytecode)
+    kinexica_asset = w3.eth.contract(abi=abi, bytecode=bytecode)
 
     # Mint to block
-    tx_hash = KinexicaAsset.constructor(
+    tx_hash = kinexica_asset.constructor(
         asset_id,
         int(temp * 100),
         int(ethylene * 100),

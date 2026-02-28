@@ -35,11 +35,15 @@ def get_routing_task(routing_agent):
         description=(
             "Accept the completed Smart Contract / Liquidation Agreement. "
             "You MUST use the 'Save Smart Contract to Ledger' tool to save the exact text. "
-            "Then, you MUST use the 'Mint Immutable Smart Contract' tool to permanently secure "
-            "the asset degradation metrics and sale price into the local Ganache block. "
+            "Then, you MUST use the 'Mint Immutable Smart Contract' tool "
+            "to permanently secure the asset degradation metrics and sale "
+            "price into the local Ganache block. "
             "Lastly, you MUST use the 'Broadcast Webhook to Supply Chain' tool to notify "
             "drivers of the pickup."
         ),
-        expected_output="Confirmation that the smart contract was minted on Web3, the ledger has been updated, and webhooks fired.",
+        expected_output=(
+            "Confirmation that the smart contract was minted on Web3, "
+            "the ledger has been updated, and webhooks fired."
+        ),
         agent=routing_agent
     )

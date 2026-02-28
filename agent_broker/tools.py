@@ -39,9 +39,10 @@ def broadcast_webhook(payload_summary: str) -> str:
 @tool("Mint Immutable Smart Contract")
 def mint_smart_contract(asset_id: str, temp: float, ethylene: float, hours: float, price: float) -> str:
     """
-    Deploys a cryptographically secure proof-of-kinetics verification smart contract 
-    to the local offline Ethereum node (Ganache/Eth-Tester).
-    You MUST provide exactly: asset_id, temperature, ethylene ppm, remaining hours, and the negotiated liquidated price.
+    Deploys a cryptographically secure proof-of-kinetics verification 
+    smart contract to the local offline Ethereum node (Ganache/Eth-Tester).
+    You MUST provide exactly: asset_id, temperature, ethylene ppm, 
+    remaining hours, and the negotiated liquidated price.
     """
     print(
         f"\n[BLOCKCHAIN] Deploying Proof-of-Kinetics for {asset_id} at ${price}...")
