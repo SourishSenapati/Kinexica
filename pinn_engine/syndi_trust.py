@@ -1,4 +1,4 @@
-# pylint: skip-file
+# pylint: disable=import-error, broad-except, line-too-long
 import os
 from stegano import lsb
 

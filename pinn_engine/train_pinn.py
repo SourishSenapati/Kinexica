@@ -1,4 +1,4 @@
-# pylint: skip-file
+# pylint: disable=import-error, no-member, invalid-name, unused-variable
 """
 Training script for the PINN engine.
 """
@@ -8,7 +8,6 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader, TensorDataset
 import pandas as pd
-import numpy as np
 
 # Use CUDA if available
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

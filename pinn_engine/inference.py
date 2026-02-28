@@ -1,4 +1,4 @@
-# pylint: skip-file
+# pylint: disable=import-error, no-member, invalid-name
 """
 Inference script for the Physics-Informed Neural Network engine.
 """

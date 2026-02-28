@@ -1,4 +1,4 @@
-# pylint: skip-file
+# pylint: disable=import-error, no-member, redefined-outer-name, unused-argument
 """
 Main Orchestrator: FastAPI Backend & Zero-Cost SQLite Database.
 Acts as the central Source of Truth.

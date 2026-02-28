@@ -1,4 +1,4 @@
-# pylint: skip-file
+# pylint: disable=import-error, no-member
 """
 Smart Contract deployment logic implementation.
 """

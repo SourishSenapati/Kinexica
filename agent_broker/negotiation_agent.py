@@ -1,4 +1,4 @@
-# pylint: skip-file
+# pylint: disable=import-error, no-member
 """
 Module for running the negotiation swarm to mitigate asset degradation costs.
 """

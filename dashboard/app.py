@@ -1,4 +1,4 @@
-# pylint: skip-file
+# pylint: disable=import-error, no-member, unexpected-keyword-arg, broad-except, too-many-function-args
 """
 SpoilSense Edge Client: Real-time UI dashboard rendered using Flet.
 Includes Phase 12 Monetization Engine 3-Tiers: B2B QA Gateway, B2C Mobile Lens, B2G Heatmap.
@@ -59,7 +59,7 @@ def main(page: ft.Page):
     lens_gps = ft.Text("GPS: 40.71° N, -74.00° W (Truncated 5km Radius) | Open-Meteo Temp: 22°C",
                        size=12, color=ft.colors.GREY_400)
 
-    def trigger_lens_scan(e):
+    def trigger_lens_scan(_):
         lens_img.visible = True
         lens_status.color = ft.colors.BLUE_400
         lens_status.value = "Analyzing Reaction-Diffusion Kinetics..."
@@ -76,7 +76,7 @@ def main(page: ft.Page):
         if result.get("color") == "red":
             lens_status.color = ft.colors.RED_400
             lens_status.value = "Anomalous Degradation - Divert from Human Consumption"
-            lens_status.value += f"\n(Pathogenic Variant: Botrytis cinerea)\n[Syndi Trust Verified]"
+            lens_status.value += "\n(Pathogenic Variant: Botrytis cinerea)\n[Syndi Trust Verified]"
         else:
             lens_status.color = ft.colors.GREEN_400
             lens_status.value = "Visual Kinetics Normal - No Pathogen Detected\n[Syndi Trust Verified]"

@@ -1,6 +1,6 @@
+# pylint: disable=import-error, no-member, invalid-name, unused-variable
 import cv2
 import numpy as np
-# pylint: skip-file
 import os
 
 
