@@ -37,18 +37,26 @@ def broadcast_webhook(payload_summary: str) -> str:
 
 
 @tool("Mint Immutable Smart Contract")
-def mint_smart_contract(asset_id: str, temp: float, ethylene: float, hours: float, price: float) -> str:
+def mint_smart_contract(asset_id: str, temp: float, ethylene: float, hours: float, price: float, mass_kg: float = 1000.0) -> str:
     """
     Deploys a cryptographically secure proof-of-kinetics verification 
     smart contract to the local offline Ethereum node (Ganache/Eth-Tester).
     You MUST provide exactly: asset_id, temperature, ethylene ppm, 
     remaining hours, and the negotiated liquidated price.
+    Also tracks carbon credit MRV offset via ERC-20 KCT issuance.
     """
     print(
         f"\n[BLOCKCHAIN] Deploying Proof-of-Kinetics for {asset_id} at ${price}...")
 
+    # MRV Carbon Credit Protocol (Phase 2)
+    ef_landfill = 0.5  # kg CO2e per kg in landfill
+    ef_upcycle = 0.1   # kg CO2e per kg in bio-feed upcycle
+
+    co2e_saved_kg = mass_kg * (ef_landfill - ef_upcycle)
+    grams_methane_prevented = int((co2e_saved_kg / 25.0) * 1000)
+
     h, b = deploy_kinexica_contract(asset_id, float(
-        temp), float(ethylene), float(hours), float(price))
+        temp), float(ethylene), float(hours), float(price), grams_methane_prevented)
 
     # Update SQLite Database so UI is synced
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -62,4 +70,15 @@ def mint_smart_contract(asset_id: str, temp: float, ethylene: float, hours: floa
     conn.commit()
     conn.close()
 
-    return f"Smart contract minted securely. TxHash: {h} Block: {b}"
+    import json
+    mrv_report = json.dumps({
+        "asset_id": asset_id,
+        "mass_rescued_kg": mass_kg,
+        "location_offset": "Anonymized via Edge Truncation",
+        "co2e_saved_kg": co2e_saved_kg,
+        "kct_tokens_minted": grams_methane_prevented,
+        "blockchain_tx_receipt": h
+    }, indent=2)
+
+    return (f"Smart contract minted securely. TxHash: {h} Block: {b}\n"
+            f"MRV Report Generated:\n{mrv_report}")

@@ -8,7 +8,8 @@ from web3.providers.eth_tester import EthereumTesterProvider
 
 
 def deploy_kinexica_contract(
-    asset_id: str, temp: float, ethylene: float, hours: float, price: float
+    asset_id: str, temp: float, ethylene: float, hours: float, price: float,
+    grams_methane_saved: int = 0
 ):
     """
     Simulates or deploys a smart contract directly to a local offline Ethereum node.
@@ -56,7 +57,8 @@ def deploy_kinexica_contract(
         int(temp * 100),
         int(ethylene * 100),
         int(hours * 100),
-        int(price * 100)
+        int(price * 100),
+        grams_methane_saved
     ).transact()
 
     # Wait for block
