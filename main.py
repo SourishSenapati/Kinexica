@@ -1,82 +1,197 @@
 """
-Main orchestrator script to monitor asset degradation and trigger the swarm.
+Main Orchestrator: FastAPI Backend & Zero-Cost SQLite Database.
+Acts as the central Source of Truth.
 """
+import asyncio
 import os
 import sys
-import time
+import threading
 
 import pandas as pd
+from fastapi import BackgroundTasks, FastAPI
+from sqlalchemy import Column, Float, Integer, String, create_engine
+from sqlalchemy.orm import declarative_base, sessionmaker
 
 from agent_broker.negotiation_agent import trigger_negotiation_swarm
 
-# Add current directory to path so we can import modules properly
+# Ensure local imports work
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+# --- 1. SQLite FOSS Database Setup ---
+DATABASE_URL = "sqlite:///./inventory.db"
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+SESSION_LOCAL = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+
+
+class AssetRecord(Base):  # pylint: disable=too-few-public-methods
+    """
+    SQLAlchemy ORM model representing the perishable asset's current state.
+    """
+    __tablename__ = "assets"
+    id = Column(Integer, primary_key=True, index=True)
+    asset_id = Column(String, unique=True, index=True)
+    current_temp_c = Column(Float)
+    ethylene_ppm = Column(Float)
+    estimated_shelf_life_h = Column(Float)
+    status = Column(String)  # "Stable" or "Distressed" or "Liquidated"
+
+
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI(title="SpoilSense API",
+              description="Edge Backend for Autonomous Negotiation")
+
+
+class AppState:  # pylint: disable=too-few-public-methods
+    """State holder to avoid global variables for linting."""
+    is_monitoring = False
+
+
+app_state = AppState()
+
+# --- 2. PINN Inference Mock ---
 
 
 def mock_pinn_inference(row):
     """
-    Mock inference function replacing the active PINN model for the sake of setting up the swarm.
-    It takes an environmental state and simulates what the PINN would output.
-    Our synthetic data already has 'actual_shelf_life_hours'.
+    Mocks a PINN inference by extracting the expected output.
     """
     return row['actual_shelf_life_hours']
 
+# --- 3. Monitoring Loop ---
 
-def monitor_asset(csv_path="data/synthetic_sensor_data.csv"):
+
+async def continuous_monitor(csv_path="data/synthetic_sensor_data.csv"):
     """
-    Simulates a real-time monitoring loop ingesting data (e.g., from an edge sensor/PINN).
+    Continuous monitoring loop for edge sensors.
     """
     base_dir = os.path.dirname(os.path.abspath(__file__))
     full_csv_path = os.path.join(base_dir, csv_path)
 
-    print("[SYSTEM] Starting Continuous Monitoring Loop...")
-
     if not os.path.exists(full_csv_path):
-        print(
-            f"Error: {full_csv_path} not found. Please run sensor_simulator.py first.")
+        print(f"Error: {full_csv_path} not found.")
+        app_state.is_monitoring = False
         return
 
     df = pd.read_csv(full_csv_path)
+    db = SESSION_LOCAL()
+
+    # Get or create asset in DB
+    asset = db.query(AssetRecord).filter(
+        AssetRecord.asset_id == "Pallet-4B-Tomatoes").first()
+    if not asset:
+        asset = AssetRecord(
+            asset_id="Pallet-4B-Tomatoes",
+            current_temp_c=0.0,
+            ethylene_ppm=0.0,
+            estimated_shelf_life_h=500.0,
+            status="Stable"
+        )
+        db.add(asset)
+        db.commit()
 
     for _, row in df.iterrows():
-        # 1. Ingest predicted shelf life from the (mock) PINN
-        predicted_shelf_life = mock_pinn_inference(row)
-
-        # Log to terminal (could be sent to dashboard later)
-        print(f"Hour {int(row['timestamp_hour'])} - Temp: {row['temperature_c']}°C, "
-              f"Ethylene: {row['ethylene_ppm']} ppm | "
-              f"Estimated Shelf Life: {predicted_shelf_life:.2f} hrs")
-
-        # 2. Threshold Breach Logic
-        # The moment predicted_shelf_life drops below 120.0 hours, halt and trigger
-        if predicted_shelf_life < 120.0:
-            print("\n================================================")
-            print("[ALERT] THERMODYNAMIC ANOMALY DETECTED.")
-            print(
-                f"[ALERT] Predicted shelf life ({predicted_shelf_life:.2f}h) "
-                f"dropped below critical threshold (120h)."
-            )
-            print("[ALERT] Halting standard monitoring loop...")
-            print("================================================\n")
-
-            # 3. Data Extraction & Packaging
-            payload = {
-                "asset_id": "Pallet-4B-Tomatoes",
-                "current_temp_c": row['temperature_c'],
-                "peak_ethylene_ppm": row['ethylene_ppm'],
-                "estimated_hours_remaining": predicted_shelf_life,
-                "timestamp_hour": row['timestamp_hour']
-            }
-
-            # 4. Handoff to Swarm
-            trigger_negotiation_swarm(payload)
-
-            # Break the loop because asset is liquidated
+        if not app_state.is_monitoring:
             break
 
-        # Simulate real-time delay (fast-forwarded for testing)
-        time.sleep(0.05)
+        # Re-fetch asset to avoid stale state
+        asset = db.query(AssetRecord).filter(
+            AssetRecord.asset_id == "Pallet-4B-Tomatoes").first()
+
+        # Check if already liquidated by a previous breach
+        if asset.status == "Liquidated":
+            print("[SYSTEM] Asset already liquidated. Monitoring paused.")
+            app_state.is_monitoring = False
+            break
+
+        predicted_shelf_life = mock_pinn_inference(row)
+
+        # Update DB State
+        asset.current_temp_c = row['temperature_c']
+        asset.ethylene_ppm = row['ethylene_ppm']
+        asset.estimated_shelf_life_h = predicted_shelf_life
+
+        status = "Stable"
+        if predicted_shelf_life < 120.0:
+            status = "Distressed"
+        asset.status = status
+        db.commit()
+
+        print(
+            f"[API UPDATE] Temp: {asset.current_temp_c}°C | "
+            f"Ethylene: {asset.ethylene_ppm} ppm | Status: {asset.status} | "
+            f"Shelf Life: {predicted_shelf_life:.2f}h"
+        )
+
+        if status == "Distressed":
+            print("\n[ALERT] Thermodynamic Anomaly recorded in SQLite.")
+            # Trigger Agent Swarm
+            payload = {
+                "asset_id": asset.asset_id,
+                "current_temp_c": asset.current_temp_c,
+                "peak_ethylene_ppm": asset.ethylene_ppm,
+                "estimated_hours_remaining": predicted_shelf_life
+            }
+            # Freeze state as liquidated to prevent repeated swarm kickoff
+            asset.status = "Liquidated"
+            db.commit()
+
+            # Offload heavy LLM task to prevent freezing the API
+            threading.Thread(target=trigger_negotiation_swarm,
+                             args=(payload,)).start()
+            app_state.is_monitoring = False
+            break
+
+        # Async sleep simulates edge latency without blocking FastAPI
+        await asyncio.sleep(2.0)
+
+    db.close()
+
+# --- 4. API Endpoints ---
+
+
+@app.get("/")
+def read_root():
+    """
+    Health check endpoint.
+    """
+    return {"message": "SpoilSense Hub API is entirely FOSS and currently online."}
+
+
+@app.post("/start-monitoring")
+async def start_monitoring(background_tasks: BackgroundTasks):
+    """
+    Triggers the continuous monitoring loop in a background task.
+    """
+    if not app_state.is_monitoring:
+        app_state.is_monitoring = True
+        background_tasks.add_task(continuous_monitor)
+        return {"status": "Monitoring triggered in background."}
+    return {"status": "Already monitoring."}
+
+
+@app.get("/asset/{asset_id}")
+def get_asset_state(asset_id: str):
+    """
+    Fetches the current state of a given perashable asset.
+    """
+    db = SESSION_LOCAL()
+    asset = db.query(AssetRecord).filter(
+        AssetRecord.asset_id == asset_id).first()
+    db.close()
+    if asset:
+        return {
+            "asset_id": asset.asset_id,
+            "current_temp_c": asset.current_temp_c,
+            "ethylene_ppm": asset.ethylene_ppm,
+            "estimated_shelf_life_h": asset.estimated_shelf_life_h,
+            "status": asset.status
+        }
+    return {"error": "Asset not found in the local FOSS db."}
 
 
 if __name__ == "__main__":
-    monitor_asset()
+    import uvicorn
+    # FOSS tunnel binds to 8000 natively.
+    uvicorn.run(app, host="127.0.0.1", port=8000)
