@@ -75,8 +75,10 @@ def main(page: ft.Page):
 
         if result.get("color") == "red":
             lens_status.color = ft.colors.RED_400
-            lens_status.value = "Anomalous Degradation - Divert from Human Consumption"
-            lens_status.value += "\n(Pathogenic Variant: Botrytis cinerea)\n[Syndi Trust Verified]"
+            lens_status.value = "Anomalous Degradation - Divert from Human Consumption\n(Pathogenic Variant: Botrytis cinerea)\n[Syndi Trust Verified]"
+        elif result.get("color") == "purple":
+            lens_status.color = ft.colors.PURPLE_accent_400
+            lens_status.value = "CRITICAL: Chemical Adulteration Detected (Calcium Carbide Fraud)\n[Syndi Trust Verified]"
         else:
             lens_status.color = ft.colors.GREEN_400
             lens_status.value = "Visual Kinetics Normal - No Pathogen Detected\n[Syndi Trust Verified]"

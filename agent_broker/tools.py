@@ -37,6 +37,52 @@ def broadcast_webhook(payload_summary: str) -> str:
     return "Webhook broadcast successful. Stakeholders notified."
 
 
+# --- Advanced Bio-Manufacturing Niche (B2B) ---
+@tool("Calculate Biomass Carbon Yield")
+def calculate_biomass_carbon_yield(mass_kg: float, rot_percentage: float) -> str:
+    """
+    Calculates the exact accessible glucose and carbon substrate available 
+    for Precision Fermentation matching instead of base composting.
+    """
+    glucose_yield_kg = mass_kg * rot_percentage * 0.45
+    print(
+        f"\n[BIOTECH-MATCH] Calculated {glucose_yield_kg:.2f} kg of fermentable glucose.")
+    return f"Available substrate: {glucose_yield_kg:.2f} kg pure fermentable carbon. Ready for Biotech matching."
+
+
+# --- Micro-Logistics & Gig Economy Niche (B2B2C) ---
+@tool("Dispatch Gig Driver (Kinexica Rescue API)")
+def dispatch_last_mile_gig_driver(asset_location: str, destination_lab: str, mass_kg: float) -> str:
+    """
+    Pings the 'Kinexica Rescue API' to dispatch a local gig-economy driver 
+    (Uber Freight style) to move distressed biomass immediately.
+    """
+    fee = 10.0 + (mass_kg * 0.05)  # Base fee + weight variable
+    print(
+        f"\n[GIG-RESCUE] Driver dispatched from {asset_location} to {destination_lab}. Take Rate fee: ${fee:.2f}")
+    return f"Gig driver dispatched successfully. Platform revenue generated: ${fee:.2f}"
+
+
+# --- Dynamic Retail Pricing Niche (B2B2C) ---
+@tool("Calculate Dynamic Shelf Price")
+def calculate_dynamic_shelf_price(base_price: float, remaining_hours: float) -> str:
+    """
+    Calculates instantaneous markdown for electronic shelf labels based on 
+    the PINN reaction-diffusion remaining lifespan.
+    """
+    if remaining_hours <= 18 and remaining_hours > 0:
+        discount = 0.30  # 30% off
+    elif remaining_hours <= 6 and remaining_hours > 0:
+        discount = 0.75  # 75% off
+    else:
+        discount = 0.0
+
+    new_price = base_price * (1 - discount)
+    print(
+        f"\n[DYNAMIC-FRONTLINE] Remaining: {remaining_hours}h. Markdown ({discount*100}%). New Price: ${new_price:.2f}")
+    return f"Electronic Shelf Label updated to ${new_price:.2f}"
+
+
 @tool("Mint Immutable Smart Contract")
 def mint_smart_contract(asset_id: str, temp: float, ethylene: float, hours: float, price: float, mass_kg: float = 1000.0) -> str:
     """

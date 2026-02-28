@@ -48,8 +48,17 @@ def analyze_lesion_kinetics(image_path: str, crop_archetype: int = 1):
 
     if crop_archetype == 1:
         # Archetype 1: High-Ethylene Climacterics (Tomatoes, Bananas)
+
+        # --- The Chemical Adulteration & Fraud Niche (B2C / B2G) ---
+        # Calcium Carbide ripening features high structural variance (unnaturally sharp color edges)
+        # combined with anomalous global lightness.
+        if variance_of_laplacian > 2500 and mean_intensity > 150:
+            classification = "Chemically Adulterated (Calcium Carbide / Fraud)"
+            status = "Fraudulent - Report to Authorities"
+            color = "purple"
+
         # Ethylene spike -> Rapid enzymatic softening. Low variance = Safe Senescence.
-        if variance_of_laplacian < 1500:
+        elif variance_of_laplacian < 1500:
             if mean_intensity > 130:
                 classification = "Pristine"
                 status = "Stable"
