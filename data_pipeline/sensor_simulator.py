@@ -9,9 +9,10 @@ import numpy as np
 import pandas as pd
 
 
-def generate_historical_data(days=30, readings_per_day=24, output_dir=None):
+def generate_historical_data(days=2100, readings_per_day=24, output_dir=None):
     """
-    Generate synthetic IoT sensor data.
+    Generate 50,400 rows of synthetic IoT sensor data with PIDR.
+
     """
     if output_dir is None:
         output_dir = os.path.join(os.path.dirname(
@@ -38,24 +39,29 @@ def generate_historical_data(days=30, readings_per_day=24, output_dir=None):
         np.random.normal(0, 2, total_readings)
     ethylene_ppm = np.zeros(total_readings)
     shelf_life_remaining = np.zeros(total_readings)
+    pidr_rates = np.zeros(total_readings)
 
     # Initial shelf life estimation (e.g., 500 hours)
     current_shelf_life = 500.0
     current_ethylene = 0.5  # baseline ppm
 
-    # Inject an anomaly: AC fails at day 15 for 3 days
-    ac_failure_start = 15 * readings_per_day
-    ac_failure_end = 18 * readings_per_day
-    temps[ac_failure_start:ac_failure_end] += np.linspace(
-        0, 12, ac_failure_end - ac_failure_start)  # Temp spikes by 12 degrees
+    # Inject an anomaly: AC fails at random points
+    np.random.seed(101)
+    for _ in range(int(days / 15)):
+        ac_failure_start = np.random.randint(0, total_readings - 72)
+        ac_failure_end = ac_failure_start + 72
+        temps[ac_failure_start:ac_failure_end] += np.linspace(
+            0, 12, ac_failure_end - ac_failure_start)
 
     for i in range(total_readings):
         # Convert temp to Kelvin
         temp_k = temps[i] + 273.15
 
-        # Calculate reaction rate constant (k) using Arrhenius
+        # Calculate reaction rate constant (k) using Arrhenius (PIDR proxy)
         k = pre_exponential * \
             np.exp(-activation_energy / (gas_constant * temp_k))
+
+        pidr_rates[i] = k
 
         # Ethylene emission correlates with the degradation rate
         current_ethylene += (k * 0.01) + np.random.normal(0, 0.05)
@@ -73,6 +79,7 @@ def generate_historical_data(days=30, readings_per_day=24, output_dir=None):
         'temperature_c': np.round(temps, 2),
         'humidity_percent': np.round(humidities, 2),
         'ethylene_ppm': np.round(ethylene_ppm, 3),
+        'pidr': np.round(pidr_rates, 5),  # Physics-Informed Degradation Rate
         'actual_shelf_life_hours': np.round(shelf_life_remaining, 2)
     })
 

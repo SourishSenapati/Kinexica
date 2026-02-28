@@ -3,6 +3,7 @@ Module for running the negotiation swarm to mitigate asset degradation costs.
 """
 import json
 from crewai import Agent, Task, Crew, Process, LLM
+from agent_broker.routing_agent import get_routing_agent, get_routing_task
 
 
 def trigger_negotiation_swarm(payload: dict):
@@ -82,10 +83,14 @@ def trigger_negotiation_swarm(payload: dict):
         agent=broker
     )
 
+    # Phase 4: Routing Agent
+    routing_agent = get_routing_agent(llm)
+    r_task = get_routing_task(routing_agent)
+
     # Instantiate the Crew
     negotiation_crew = Crew(
-        agents=[assessor, broker],
-        tasks=[assess_task, broker_task],
+        agents=[assessor, broker, routing_agent],
+        tasks=[assess_task, broker_task, r_task],
         process=Process.sequential
     )
 
