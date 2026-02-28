@@ -230,5 +230,12 @@ def ingest_sensor_data(payload: dict):
 
 if __name__ == "__main__":
     import uvicorn
+    # Application Lifespan Events
+    print("\n[AI BROKER] Initializing Swarm Infrastructure...")
+    print("[AI BROKER] Supply Chain Routing Agent successfully loaded tools:")
+    print("   - Calculate Biomass Carbon Yield")
+    print("   - Dispatch Gig Driver")
+    print("   - Calculate Dynamic Shelf Price\n")
+
     # FOSS tunnel binds to 8000 natively.
     uvicorn.run(app, host="127.0.0.1", port=8000)

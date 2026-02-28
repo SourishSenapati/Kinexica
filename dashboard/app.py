@@ -13,7 +13,7 @@ from sys import path
 
 path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-API_BASE_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:8000")
+API_BASE_URL = os.getenv("API_BASE_URL", "https://real-cougars-attack.loca.lt")
 
 
 def main(page: ft.Page):
