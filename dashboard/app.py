@@ -42,7 +42,7 @@ def main(page: ft.Page):
                     status_text, tx_hash_text], alignment=ft.MainAxisAlignment.CENTER)
     status_card = ft.Container(content=col, width=300, height=200, bgcolor=ft.Colors.GREY_800,
                                border_radius=15, padding=20, alignment=ft.Alignment(0, 0))
-    status_card.animate = ft.animation.Animation(
+    status_card.animate = ft.Animation(
         500, ft.AnimationCurve.EASE_OUT)
 
     # === Tier 2: Kinexica B2C Mobile Lens (Zero-Hardware Fallback) ===
