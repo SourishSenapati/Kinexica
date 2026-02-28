@@ -1,4 +1,4 @@
-# pylint: disable=import-error, no-member, unexpected-keyword-arg, broad-except, too-many-function-args
+# pylint: disable=import-error, no-member, unexpected-keyword-arg, broad-except, too-many-function-args, wrong-import-position, wrong-import-order, line-too-long, missing-function-docstring
 """
 SpoilSense Edge Client: Real-time UI dashboard rendered using Flet.
 Includes Phase 12 Monetization Engine 3-Tiers: B2B QA Gateway, B2C Mobile Lens, B2G Heatmap.

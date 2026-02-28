@@ -1,7 +1,10 @@
-# pylint: disable=import-error, no-member, invalid-name, unused-variable
+# pylint: disable=import-error, no-member, invalid-name, unused-variable, wrong-import-order, line-too-long
+"""
+Module for running the Visual Physics-Informed Neural Network on biological assets.
+"""
+import os
 import cv2
 import numpy as np
-import os
 
 
 def analyze_lesion_kinetics(image_path: str, crop_archetype: int = 1):

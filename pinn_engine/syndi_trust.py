@@ -1,4 +1,7 @@
 # pylint: disable=import-error, broad-except, line-too-long
+"""
+Module for creating an immutable Syndi Trust watermark embedded with Least Significant Bit steganography.
+"""
 import os
 from stegano import lsb
 
