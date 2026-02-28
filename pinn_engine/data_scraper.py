@@ -40,12 +40,26 @@ def generate_mock_usda_dataset(output_path):
         current_ethylene += k * 0.05
         ethylene_emissions.append(current_ethylene)
 
+    # Adulteration (Calcium Carbide) logic
+    variance = np.random.normal(1000, 200, total_records)
+    intensity = np.random.normal(100, 20, total_records)
+
+    # Inject 10% fraud data
+    fraud_indices = np.random.choice(
+        total_records, int(total_records * 0.1), replace=False)
+    variance[fraud_indices] = np.random.normal(3000, 300, len(fraud_indices))
+    intensity[fraud_indices] = np.random.normal(160, 15, len(fraud_indices))
+
     df = pd.DataFrame({
         "timestamp_hour": time_series,
         "temperature_c": temps,
         "humidity_percent": humidities,
         **unnecessary_cols,
-        "ethylene_ppm": ethylene_emissions
+        "ethylene_ppm": ethylene_emissions,
+        "variance_of_laplacian": variance,
+        "mean_intensity": intensity,
+        "pidr": current_ethylene * 0.1,  # Mock target validation
+        "actual_shelf_life_hours": np.random.uniform(10, 200, total_records)
     })
 
     df.to_csv(output_path, index=False)
@@ -60,9 +74,11 @@ def align_and_standardize(input_path, output_path):
     print(f"\n[Alignment Agent] Ingesting raw dataset from {input_path}")
     df_raw = pd.read_csv(input_path)
 
-    # Mathematical standard requirement: [Time, Temp, Humidity, Ethylene]
+    # Mathematical standard requirement: [Time, Temp, Humidity, Ethylene, Variance, Intensity, Targets]
     required_columns = ["timestamp_hour", "temperature_c",
-                        "humidity_percent", "ethylene_ppm"]
+                        "humidity_percent", "ethylene_ppm",
+                        "variance_of_laplacian", "mean_intensity",
+                        "pidr", "actual_shelf_life_hours"]
 
     df_aligned = df_raw[required_columns].copy()
 
@@ -71,6 +87,9 @@ def align_and_standardize(input_path, output_path):
     df_aligned['humidity_percent'] = np.round(
         df_aligned['humidity_percent'], 2)
     df_aligned['ethylene_ppm'] = np.round(df_aligned['ethylene_ppm'], 3)
+    df_aligned['variance_of_laplacian'] = np.round(
+        df_aligned['variance_of_laplacian'], 2)
+    df_aligned['mean_intensity'] = np.round(df_aligned['mean_intensity'], 2)
 
     df_aligned.to_csv(output_path, index=False)
 

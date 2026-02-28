@@ -1,4 +1,4 @@
-# pylint: disable=import-error, line-too-long, broad-except, consider-using-f-string, import-outside-toplevel
+# pylint: disable=import-error, line-too-long, broad-except, consider-using-f-string, import-outside-toplevel, unused-variable
 """
 Tools for the agent broker.
 """
@@ -102,7 +102,7 @@ def mint_smart_contract(asset_id: str, temp: float, ethylene: float, hours: floa
     co2e_saved_kg = mass_kg * (ef_landfill - ef_upcycle)
     grams_methane_prevented = int((co2e_saved_kg / 25.0) * 1000)
 
-    h, b = deploy_kinexica_contract(asset_id, float(
+    h, b, c_addr = deploy_kinexica_contract(asset_id, float(
         temp), float(ethylene), float(hours), float(price), grams_methane_prevented)
 
     # Update SQLite Database so UI is synced

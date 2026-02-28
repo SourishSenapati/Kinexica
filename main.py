@@ -24,6 +24,9 @@ engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SESSION_LOCAL = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
+# --- WEB3 PARAMETRIC INSURANCE ORACLE (LOCAL GANache BINDING) ---
+CONTRACT_ADDRESS = "0xF2E246BB76DF876Cef8b38ae84130F4F55De395b"
+
 
 class AssetRecord(Base):  # pylint: disable=too-few-public-methods
     """

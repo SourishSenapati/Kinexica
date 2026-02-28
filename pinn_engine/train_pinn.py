@@ -20,7 +20,8 @@ class PINNModel(nn.Module):
 
     def __init__(self):
         super(PINNModel, self).__init__()
-        self.fc1 = nn.Linear(3, 64)   # inputs: Temp, Humidity, Ethylene
+        # inputs: Temp, Humidity, Ethylene, CV_Variance, CV_Intensity
+        self.fc1 = nn.Linear(5, 64)
         self.fc2 = nn.Linear(64, 128)
         self.fc3 = nn.Linear(128, 64)
         self.out_pidr = nn.Linear(64, 1)        # Output 1: PIDR (Proxy for k)
@@ -43,7 +44,7 @@ def train_model():
     Load data, initialize model, and run epochs. Save weights on interruption.
     """
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    data_path = os.path.join(base_dir, "data", "synthetic_sensor_data.csv")
+    data_path = os.path.join(base_dir, "data", "pytorch_training_matrix.csv")
 
     if not os.path.exists(data_path):
         print(f"Dataset missing at {data_path}. Please generate it first.")
@@ -53,7 +54,8 @@ def train_model():
     df = pd.read_csv(data_path)
 
     # Input Features
-    X = df[['temperature_c', 'humidity_percent', 'ethylene_ppm']].values
+    X = df[['temperature_c', 'humidity_percent', 'ethylene_ppm',
+            'variance_of_laplacian', 'mean_intensity']].values
 
     # Targets: PIDR, Shelf Life
     y_pidr = df[['pidr']].values
@@ -71,10 +73,14 @@ def train_model():
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
     criterion_mse = nn.MSELoss()
 
-    model_save_path = os.path.join(base_dir, "pinn_engine", "pinn_weights.pth")
+    model_save_path_pinn = os.path.join(
+        base_dir, "pinn_engine", "kinexica_pinn.pth")
+    model_save_path_visual = os.path.join(
+        base_dir, "pinn_engine", "visual_pinn.pth")
 
-    epochs = 100
-    print(f"Beginning PINN training on {device}... (Ctrl+C to stop and save)")
+    epochs = 500
+    print(
+        f"Beginning 5-Tier CV+PINN training on {device}... (Ctrl+C to stop and save)")
 
     try:
         for epoch in range(epochs):
@@ -104,15 +110,16 @@ def train_model():
 
     except KeyboardInterrupt:
         print("\n\n[WARNING] Training Interrupted via Keyboard.")
-        print(
-            f"Triggering SAVE ON INTERRUPT protocol. Saving weights to {model_save_path}...")
-        torch.save(model.state_dict(), model_save_path)
+        print(f"Triggering SAVE ON INTERRUPT protocol. Saving weights...")
+        torch.save(model.state_dict(), model_save_path_pinn)
+        torch.save(model.state_dict(), model_save_path_visual)
         print("Weights saved successfully. Exiting gracefully.")
         return
 
     # Save standard upon completion
-    print(f"\nTraining Complete! Saving weights to {model_save_path}...")
-    torch.save(model.state_dict(), model_save_path)
+    print(f"\nTraining Complete! Saving dual-weights...")
+    torch.save(model.state_dict(), model_save_path_pinn)
+    torch.save(model.state_dict(), model_save_path_visual)
     print("Done.")
 
 

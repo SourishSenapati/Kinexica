@@ -40,7 +40,7 @@ def deploy_kinexica_contract(
     bytecode = contract_interface['bin']
 
     # Try connecting to Ganache, fallback to Eth Tester
-    w3 = Web3(Web3.HTTPProvider('http://127.0.0.1:8545'))
+    w3 = Web3(Web3.HTTPProvider('http://127.0.0.1:7545'))
     if not w3.is_connected():
         print(
             "[BLOCKCHAIN] Ganache not detected natively. Booting EthereumTesterProvider...")
@@ -65,9 +65,11 @@ def deploy_kinexica_contract(
     # Wait for block
     tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
-    return tx_receipt.transactionHash.hex(), tx_receipt.blockNumber
+    return tx_receipt.transactionHash.hex(), tx_receipt.blockNumber, tx_receipt.contractAddress
 
 
 if __name__ == "__main__":
-    h, b = deploy_kinexica_contract("TEST", 21.0, 5.0, 100, 2500)
-    print(h, b)
+    h, b, c_addr = deploy_kinexica_contract("TEST", 21.0, 5.0, 100, 2500)
+    print("TX HASH:", h)
+    print("BLOCK:", b)
+    print("CONTRACT_ADDRESS:", c_addr)
