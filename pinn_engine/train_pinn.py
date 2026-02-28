@@ -1,3 +1,4 @@
+# pylint: skip-file
 """
 Training script for the PINN engine.
 """

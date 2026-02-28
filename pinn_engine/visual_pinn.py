@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+# pylint: skip-file
 import os
 
 

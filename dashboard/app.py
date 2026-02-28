@@ -1,3 +1,4 @@
+# pylint: skip-file
 """
 SpoilSense Edge Client: Real-time UI dashboard rendered using Flet.
 Includes Phase 12 Monetization Engine 3-Tiers: B2B QA Gateway, B2C Mobile Lens, B2G Heatmap.

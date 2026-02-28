@@ -1,3 +1,3 @@
 """
-Blockchain logic wrapper.
+Blockchain package initialization.
 """
