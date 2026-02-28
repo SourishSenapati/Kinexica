@@ -1,3 +1,4 @@
+from pinn_engine.inference import run_inference
 # pylint: disable=import-error, no-member, redefined-outer-name, unused-argument
 """
 Main Orchestrator: FastAPI Backend & Zero-Cost SQLite Database.
@@ -10,7 +11,7 @@ import threading
 
 import pandas as pd
 from fastapi import BackgroundTasks, FastAPI
-from pydantic import BaseModel
+
 from sqlalchemy import Column, Float, Integer, String, create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
@@ -210,7 +211,6 @@ def ingest_sensor_data(payload: dict):
     Ingest live telemetry from Arduino sensors, padding CV visual data 
     if not provided by an Edge camera.
     """
-    from pinn_engine.inference import run_inference
 
     cv_variance = payload.get("cv_variance", 1000.0)  # Safe baseline
     cv_intensity = payload.get("cv_intensity", 150.0)  # Safe baseline

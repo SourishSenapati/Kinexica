@@ -3,24 +3,28 @@
 SpoilSense Edge Client: Real-time UI dashboard rendered using Flet.
 Includes Phase 12 Monetization Engine 3-Tiers: B2B QA Gateway, B2C Mobile Lens, B2G Heatmap.
 """
-from pinn_engine.syndi_trust import apply_synthid_watermark
 from pinn_engine.visual_pinn import analyze_lesion_kinetics
+from pinn_engine.syndi_trust import apply_synthid_watermark
 import asyncio
 import os
 import requests
 import flet as ft
 from sys import path
-
 path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 
 API_BASE_URL = os.getenv("API_BASE_URL", "https://real-cougars-attack.loca.lt")
 
 
 def main(page: ft.Page):
-    page.title = "SpoilSense Edge Client"
+    # Force mobile dimensions and responsive scrolling
+    page.title = "Kinexica Edge Client"
     page.theme_mode = ft.ThemeMode.DARK
+    page.window_width = 400        # Constrain width for desktop testing
+    page.window_height = 800       # Constrain height for desktop testing
+    page.scroll = ft.ScrollMode.ADAPTIVE  # Crucial for mobile scrolling
+    page.padding = 10
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.scroll = ft.ScrollMode.ADAPTIVE
 
     # === Tier 1: Kinexica B2B QA Gateway ===
     title = ft.Text("SpoilSense Telemetry (B2B Hub)",
@@ -32,17 +36,17 @@ def main(page: ft.Page):
     status_text = ft.Text("Status: UNKNOWN", size=20,
                           weight=ft.FontWeight.BOLD)
     tx_hash_text = ft.Text("", size=14, weight=ft.FontWeight.BOLD,
-                           color=ft.colors.YELLOW_200, visible=False)
+                           color=ft.Colors.YELLOW_200, visible=False)
 
     col = ft.Column([asset_id_text, temp_text, ethylene_text, shelf_life_text,
                     status_text, tx_hash_text], alignment=ft.MainAxisAlignment.CENTER)
-    status_card = ft.Container(content=col, width=300, height=200, bgcolor=ft.colors.GREY_800,
+    status_card = ft.Container(content=col, width=300, height=200, bgcolor=ft.Colors.GREY_800,
                                border_radius=15, padding=20, alignment=ft.Alignment(0, 0))
     status_card.animate = ft.animation.Animation(
         500, ft.AnimationCurve.EASE_OUT)
 
-    # === Tier 2: FinnoAQ B2C Mobile Lens (Zero-Hardware Fallback) ===
-    lens_title = ft.Text("FinnoAQ Edge Lens (B2C Mode)",
+    # === Tier 2: Kinexica B2C Mobile Lens (Zero-Hardware Fallback) ===
+    lens_title = ft.Text("Kinexica Edge Lens (B2C Mode)",
                          size=24, weight=ft.FontWeight.BOLD)
 
     img_path = os.path.abspath(os.path.join(os.path.dirname(
@@ -53,15 +57,15 @@ def main(page: ft.Page):
     lens_img = ft.Image(src=img_path, width=300, height=300,
                         fit=ft.ImageFit.CONTAIN, visible=False)
     lens_status = ft.Text("Awaiting Scan...", size=18,
-                          color=ft.colors.BLUE_200)
+                          color=ft.Colors.BLUE_200)
 
     # Coordinates rounded to 5km radius for Edge Truncation privacy (GDPR / DPDP)
     lens_gps = ft.Text("GPS: 40.71° N, -74.00° W (Truncated 5km Radius) | Open-Meteo Temp: 22°C",
-                       size=12, color=ft.colors.GREY_400)
+                       size=12, color=ft.Colors.GREY_400)
 
     def trigger_lens_scan(_):
         lens_img.visible = True
-        lens_status.color = ft.colors.BLUE_400
+        lens_status.color = ft.Colors.BLUE_400
         lens_status.value = "Analyzing Reaction-Diffusion Kinetics..."
         page.update()
 
@@ -74,19 +78,19 @@ def main(page: ft.Page):
             img_path, out_path, "SCAN-101", result.get('classification', 'Unknown'))
 
         if result.get("color") == "red":
-            lens_status.color = ft.colors.RED_400
+            lens_status.color = ft.Colors.RED_400
             lens_status.value = "Anomalous Degradation - Divert from Human Consumption\n(Pathogenic Variant: Botrytis cinerea)\n[Syndi Trust Verified]"
         elif result.get("color") == "purple":
-            lens_status.color = ft.colors.PURPLE_accent_400
+            lens_status.color = ft.Colors.PURPLE_accent_400
             lens_status.value = "CRITICAL: Chemical Adulteration Detected (Calcium Carbide Fraud)\n[Syndi Trust Verified]"
         else:
-            lens_status.color = ft.colors.GREEN_400
+            lens_status.color = ft.Colors.GREEN_400
             lens_status.value = "Visual Kinetics Normal - No Pathogen Detected\n[Syndi Trust Verified]"
 
         page.update()
 
     scan_btn = ft.ElevatedButton("📷 Take Photo / Scan Fruit", on_click=trigger_lens_scan,
-                                 bgcolor=ft.colors.PURPLE_600, color=ft.colors.WHITE)
+                                 bgcolor=ft.Colors.PURPLE_600, color=ft.Colors.WHITE)
 
     # === Tier 3: B2G Bio-Security Heatmap ===
     b2g_title = ft.Text("National Bio-Security Heatmap (B2G License)",
@@ -95,9 +99,9 @@ def main(page: ft.Page):
         "Loading live outbreak geometries from PostGIS...", size=16, italic=True)
     b2g_alerts = ft.ListView(expand=True, spacing=10, height=200)
     b2g_alerts.controls.append(ft.Text(
-        "🔴 ALERT: Botrytis cinerea outbreak detected in Zone 4 (50 scans/hr)", color=ft.colors.RED_400))
+        "🔴 ALERT: Botrytis cinerea outbreak detected in Zone 4 (50 scans/hr)", color=ft.Colors.RED_400))
     b2g_alerts.controls.append(ft.Text(
-        "🟡 WARNING: Penicillium levels rising in Zone 2", color=ft.colors.AMBER_400))
+        "🟡 WARNING: Penicillium levels rising in Zone 2", color=ft.Colors.AMBER_400))
 
     # TABS
     t = ft.Tabs(
@@ -107,7 +111,7 @@ def main(page: ft.Page):
             ft.Tab(
                 text="B2B: Kinexica Hub",
                 content=ft.Column([title, status_card, ft.ElevatedButton("Start Monitoring Loop", on_click=lambda e: requests.post(
-                    f"{API_BASE_URL}/start-monitoring", timeout=2), bgcolor=ft.colors.BLUE_700, color=ft.colors.WHITE)], alignment=ft.MainAxisAlignment.CENTER)
+                    f"{API_BASE_URL}/start-monitoring", timeout=2), bgcolor=ft.Colors.BLUE_700, color=ft.Colors.WHITE)], alignment=ft.MainAxisAlignment.CENTER)
             ),
             ft.Tab(
                 text="B2C: Mobile Lens",
@@ -142,18 +146,18 @@ def main(page: ft.Page):
                         status_text.value = f"Status: {status.upper()}"
 
                         if status == "Stable":
-                            status_card.bgcolor = ft.colors.GREEN_700
+                            status_card.bgcolor = ft.Colors.GREEN_700
                             is_flashing = False
                             tx_hash_text.visible = False
                         elif status == "Liquidated" and data.get("tx_hash"):
-                            status_card.bgcolor = ft.colors.AMBER_600
+                            status_card.bgcolor = ft.Colors.AMBER_600
                             is_flashing = False
                             tx_hash_text.value = f"TxHash: {data['tx_hash'][:10]}... | Block: {data['block_number']} | KCT Minted"
                             tx_hash_text.visible = True
                             status_text.value = "Status: IMMUTABLE CONTRACT SECURED"
                         elif status in ("Distressed", "Liquidated"):
                             is_flashing = not is_flashing
-                            status_card.bgcolor = ft.colors.RED_900 if is_flashing else ft.colors.RED_500
+                            status_card.bgcolor = ft.Colors.RED_900 if is_flashing else ft.Colors.RED_500
                     else:
                         status_text.value = "Status: NOT FOUND"
                 else:
