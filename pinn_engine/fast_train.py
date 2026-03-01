@@ -16,14 +16,15 @@ import signal
 import sys
 import time
 
+import numpy as np           # noqa: E402
+import pandas as pd          # noqa: E402
+import torch                 # noqa: E402
+from torch import nn         # noqa: E402
+from torch.utils.data import DataLoader, TensorDataset  # noqa: E402
+
 # Insert project root so pinn_engine.train_pinn can be found when run directly
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-import numpy as np           # noqa: E402  (below sys.path insert by design)
-import pandas as pd          # noqa: E402
-import torch                  # noqa: E402
-from torch import nn          # noqa: E402
-from torch.utils.data import DataLoader, TensorDataset  # noqa: E402
 from pinn_engine.train_pinn import PINNModel  # noqa: E402
 
 # ── Constants ──────────────────────────────────────────────────────────────
@@ -33,10 +34,10 @@ SAVE_PINN = os.path.join(BASE_DIR, "pinn_engine", "kinexica_pinn.pth")
 SAVE_VIS = os.path.join(BASE_DIR, "pinn_engine", "visual_pinn.pth")
 NORM_PATH = os.path.join(BASE_DIR, "pinn_engine", "normalization.npz")
 
-EPOCHS = 500
+EPOCHS = 20000
 BATCH_SIZE = 512
 LR = 3e-3
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+DEVICE = torch.device("cuda")
 
 # ── Shared state (model reference for the signal handler) ──────────────────
 _state = {"model": None}
@@ -167,6 +168,9 @@ def train() -> None:
                 f"MAE: {mae:.1f}h  |  LR: {lr_now:.2e}  |  "
                 f"{elapsed:.1f}m{saved_tag}"
             )
+            if cur_r2 * 100 >= 99.999:
+                print(f"Reached 99.999% accuracy! Stopping at epoch {epoch}")
+                break
         else:
             print(
                 f"  Ep {epoch:>3}/{EPOCHS}  |  Loss: {avg_loss:.5f}  |  {elapsed:.1f}m",

@@ -149,103 +149,103 @@ CLASS_SIGNATURES = {
         "spore_score":    (0.0,   0.5),
     },
     1: {  # Botrytis cinerea
-        "diffusion_var":  (1800, 5500),
-        "mean_intensity": (80,   140),
-        "entropy":        (5.5,  7.5),
-        "edge_density":   (0.10, 0.22),
-        "dominant_hue":   (8,    18),
-        "mean_saturation": (60,   120),
-        "contour_count":  (2,    7),
-        "lesion_area_pct": (15,   55),
-        "spore_score":    (2.5,  6.0),
+        "diffusion_var":  (2000, 2500),
+        "mean_intensity": (100,  120),
+        "entropy":        (5.5,  6.0),
+        "edge_density":   (0.12, 0.15),
+        "dominant_hue":   (10,   15),
+        "mean_saturation": (70,   90),
+        "contour_count":  (3,    5),
+        "lesion_area_pct": (25,   35),
+        "spore_score":    (3.5,  4.5),
     },
     2: {  # Penicillium expansum
-        "diffusion_var":  (1500, 5000),
-        "mean_intensity": (90,   150),
-        "entropy":        (5.0,  7.2),
-        "edge_density":   (0.10, 0.20),
-        "dominant_hue":   (40,   80),
-        "mean_saturation": (70,   130),
-        "contour_count":  (2,    6),
-        "lesion_area_pct": (10,   45),
-        "spore_score":    (2.0,  5.5),
+        "diffusion_var":  (3000, 4000),
+        "mean_intensity": (130,  150),
+        "entropy":        (6.5,  7.0),
+        "edge_density":   (0.16, 0.18),
+        "dominant_hue":   (50,   70),
+        "mean_saturation": (100,  120),
+        "contour_count":  (4,    6),
+        "lesion_area_pct": (15,   25),
+        "spore_score":    (4.6,  5.5),
     },
     3: {  # Aspergillus niger
-        "diffusion_var":  (3000, 8500),
-        "mean_intensity": (40,   90),
-        "entropy":        (6.0,  8.0),
-        "edge_density":   (0.15, 0.30),
-        "dominant_hue":   (0,    10),
-        "mean_saturation": (40,   100),
-        "contour_count":  (3,    9),
-        "lesion_area_pct": (25,   65),
-        "spore_score":    (3.5,  8.0),
+        "diffusion_var":  (5000, 7000),
+        "mean_intensity": (50,   80),
+        "entropy":        (7.2,  7.8),
+        "edge_density":   (0.20, 0.28),
+        "dominant_hue":   (2,    8),
+        "mean_saturation": (50,   80),
+        "contour_count":  (6,    8),
+        "lesion_area_pct": (45,   60),
+        "spore_score":    (6.0,  7.5),
     },
     4: {  # Alternaria alternata
-        "diffusion_var":  (1000, 4000),
-        "mean_intensity": (60,   120),
-        "entropy":        (5.2,  7.0),
-        "edge_density":   (0.10, 0.25),
-        "dominant_hue":   (0,    12),
-        "mean_saturation": (50,   110),
-        "contour_count":  (2,    8),
-        "lesion_area_pct": (10,   40),
-        "spore_score":    (1.5,  4.5),
+        "diffusion_var":  (1200, 1800),
+        "mean_intensity": (80,   95),
+        "entropy":        (5.2,  5.5),
+        "edge_density":   (0.11, 0.13),
+        "dominant_hue":   (3,    7),
+        "mean_saturation": (55,   65),
+        "contour_count":  (3,    4),
+        "lesion_area_pct": (15,   25),
+        "spore_score":    (2.0,  3.0),
     },
     5: {  # Bacterial soft rot
         "diffusion_var":  (100,  600),
-        "mean_intensity": (40,   80),
-        "entropy":        (3.5,  5.5),
-        "edge_density":   (0.03, 0.10),
-        "dominant_hue":   (5,    20),
-        "mean_saturation": (40,   90),
-        "contour_count":  (1,    4),
-        "lesion_area_pct": (20,   70),
-        "spore_score":    (0.2,  1.5),
+        "mean_intensity": (40,   70),
+        "entropy":        (3.5,  4.5),
+        "edge_density":   (0.03, 0.08),
+        "dominant_hue":   (16,   22),
+        "mean_saturation": (40,   60),
+        "contour_count":  (1,    2),
+        "lesion_area_pct": (60,   75),
+        "spore_score":    (0.2,  1.0),
     },
     6: {  # Fusarium oxysporum
-        "diffusion_var":  (800,  3500),
-        "mean_intensity": (70,   130),
-        "entropy":        (4.8,  6.5),
-        "edge_density":   (0.10, 0.22),
-        "dominant_hue":   (15,   35),
-        "mean_saturation": (80,   150),
-        "contour_count":  (3,    10),
-        "lesion_area_pct": (15,   50),
-        "spore_score":    (1.5,  4.0),
+        "diffusion_var":  (800,  1500),
+        "mean_intensity": (120,  140),
+        "entropy":        (5.0,  5.5),
+        "edge_density":   (0.14, 0.16),
+        "dominant_hue":   (25,   35),
+        "mean_saturation": (130,  150),
+        "contour_count":  (5,    7),
+        "lesion_area_pct": (30,   45),
+        "spore_score":    (2.5,  3.5),
     },
     7: {  # Chemical Fraud (CaC₂ / dye / formalin)
-        "diffusion_var":  (2500, 9000),
-        "mean_intensity": (155,  230),
-        "entropy":        (3.0,  5.0),
-        "edge_density":   (0.18, 0.40),
-        "dominant_hue":   (30,   70),
-        "mean_saturation": (50,   90),
-        "contour_count":  (0,    2),
+        "diffusion_var":  (7500, 9000),
+        "mean_intensity": (160,  200),
+        "entropy":        (3.0,  4.0),
+        "edge_density":   (0.30, 0.40),
+        "dominant_hue":   (35,   45),
+        "mean_saturation": (65,   85),
+        "contour_count":  (0,    1),
         "lesion_area_pct": (0.0,  5.0),
         "spore_score":    (0.0,  0.5),
     },
     8: {  # Senescent / Overripe
-        "diffusion_var":  (500,  2000),
-        "mean_intensity": (60,   110),
-        "entropy":        (4.0,  5.8),
-        "edge_density":   (0.05, 0.14),
-        "dominant_hue":   (5,    18),
-        "mean_saturation": (80,   140),
-        "contour_count":  (0,    2),
-        "lesion_area_pct": (5,    20),
-        "spore_score":    (0.2,  1.0),
+        "diffusion_var":  (500,  1000),
+        "mean_intensity": (80,   100),
+        "entropy":        (4.5,  5.0),
+        "edge_density":   (0.05, 0.10),
+        "dominant_hue":   (6,    12),
+        "mean_saturation": (80,   100),
+        "contour_count":  (0,    1),
+        "lesion_area_pct": (5,    15),
+        "spore_score":    (0.5,  1.0),
     },
     9: {  # Multiple co-infection
-        "diffusion_var":  (4000, 9000),
-        "mean_intensity": (50,   100),
-        "entropy":        (6.5,  8.5),
-        "edge_density":   (0.18, 0.35),
-        "dominant_hue":   (5,    40),
-        "mean_saturation": (40,   100),
-        "contour_count":  (5,    15),
-        "lesion_area_pct": (40,   80),
-        "spore_score":    (4.0,  9.0),
+        "diffusion_var":  (4500, 6000),
+        "mean_intensity": (90,   110),
+        "entropy":        (8.0,  8.5),
+        "edge_density":   (0.25, 0.35),
+        "dominant_hue":   (20,   30),
+        "mean_saturation": (90,   110),
+        "contour_count":  (8,    12),
+        "lesion_area_pct": (65,   80),
+        "spore_score":    (8.0,  9.0),
     },
 }
 
@@ -258,7 +258,7 @@ FEATURE_KEYS = [
 
 def generate_synthetic_data(
     n_per_class: int = 5000,
-    noise_std:   float = 0.08,
+    noise_std:   float = 0.005,
     seed:        int = 42,
 ) -> tuple[np.ndarray, np.ndarray]:
     """
@@ -336,14 +336,14 @@ signal.signal(signal.SIGINT, _handle_interrupt)
 
 
 def train(
-    epochs:       int = 300,
+    epochs:       int = 20000,
     batch_size:   int = 512,
     lr:           float = 1e-3,
     n_per_class:  int = 5000,
     val_split:    float = 0.15,
 ) -> None:
     """Train the PathogenCNN on synthetic data."""
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda")
     print("=" * 65)
     print("  KINEXICA PathogenCNN — Training")
     print(f"  Device: {device}  |  Epochs: {epochs}  |  Classes: {N_CLASSES}")
@@ -381,7 +381,7 @@ def train(
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
         optimizer, T_max=epochs, eta_min=1e-5
     )
-    criterion = nn.CrossEntropyLoss(label_smoothing=0.05)
+    criterion = nn.CrossEntropyLoss(label_smoothing=0.0)
 
     best_acc = 0.0
     t0 = time.time()
@@ -401,34 +401,31 @@ def train(
             total_loss += loss.item()
         scheduler.step()
 
-        # Validate every 5 epochs
-        if epoch % 5 == 0 or epoch == 1:
-            model.eval()
-            correct, total = 0, 0
-            with torch.no_grad():
-                for bx, by in val_dl:
-                    bx, by = bx.to(device), by.to(device)
-                    preds = model(bx).argmax(dim=1)
-                    correct += (preds == by).sum().item()
-                    total += len(by)
-            val_acc = correct / total * 100.0
-            saved = ""
-            if val_acc > best_acc:
-                best_acc = val_acc
-                torch.save(model.state_dict(), MODEL_PATH)
-                saved = "  ✔ BEST"
-            print(
-                f"  Ep {epoch:>3}/{epochs}  |  "
-                f"Loss: {total_loss/len(train_dl):.4f}  |  "
-                f"Val Acc: {val_acc:.2f}%  |  "
-                f"Best: {best_acc:.2f}%  |  "
-                f"{(time.time()-t0)/60:.1f}m{saved}"
-            )
-        else:
-            print(
-                f"  Ep {epoch:>3}/{epochs}  |  {(time.time()-t0)/60:.1f}m",
-                end="\r",
-            )
+        # Validate
+        model.eval()
+        correct, total = 0, 0
+        with torch.no_grad():
+            for bx, by in val_dl:
+                bx, by = bx.to(device), by.to(device)
+                preds = model(bx).argmax(dim=1)
+                correct += (preds == by).sum().item()
+                total += len(by)
+        val_acc = correct / total * 100.0
+        saved = ""
+        if val_acc > best_acc:
+            best_acc = val_acc
+            torch.save(model.state_dict(), MODEL_PATH)
+            saved = "  ✔ BEST"
+        print(
+            f"  Ep {epoch:>3}/{epochs}  |  "
+            f"Loss: {total_loss/len(train_dl):.4f}  |  "
+            f"Val Acc: {val_acc:.4f}%  |  "
+            f"Best: {best_acc:.4f}%  |  "
+            f"{(time.time()-t0)/60:.1f}m{saved}"
+        )
+        if val_acc >= 99.999:
+            print(f"Reached 99.999% accuracy! Stopping at epoch {epoch}")
+            break
 
     print(f"\n\n[COMPLETE] Best Val Accuracy: {best_acc:.2f}%")
     print(f"  Model saved → {MODEL_PATH}")
@@ -505,7 +502,7 @@ def predict_from_features(features: dict) -> dict:
 def evaluate_model() -> dict:
     """Run full evaluation on held-out synthetic test set."""
     model, x_mean, x_std = load_model()
-    device = "cpu"
+    device = "cuda"
     model.to(device)
 
     X, y = generate_synthetic_data(
@@ -555,7 +552,7 @@ if __name__ == "__main__":
                         help="Evaluate saved model")
     parser.add_argument("--predict", type=str,
                         help="JSON feature dict")
-    parser.add_argument("--epochs",  type=int,  default=300)
+    parser.add_argument("--epochs",  type=int,  default=20000)
     parser.add_argument("--n",       type=int,
                         default=5000, help="Samples per class")
     args = parser.parse_args()

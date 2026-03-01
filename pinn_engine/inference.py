@@ -19,7 +19,7 @@ def run_inference(
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     model_path = os.path.join(base_dir, "pinn_engine", "kinexica_pinn.pth")
 
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cuda')
     model = PINNModel().to(device)
 
     if os.path.exists(model_path):

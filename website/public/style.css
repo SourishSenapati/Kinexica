@@ -794,6 +794,16 @@ footer {
   font-size: 0.78rem;
   color: var(--grey-dim);
 }
+.github-link-container {
+  margin-top: 5px;
+}
+.github-link {
+  color: #10b981;
+  text-decoration: none;
+}
+.github-link:hover {
+  text-decoration: underline;
+}
 
 /* ── Scroll animations ──────────────────────────────────────── */
 .reveal {

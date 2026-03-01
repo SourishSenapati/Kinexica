@@ -50,6 +50,13 @@ def generate_mock_usda_dataset(output_path):
     variance[fraud_indices] = np.random.normal(3000, 300, len(fraud_indices))
     intensity[fraud_indices] = np.random.normal(160, 15, len(fraud_indices))
 
+    # Fix for proper correlation
+    pidr_list = [eth * 0.1 for eth in ethylene_emissions]
+    # Shelf life correlates inversely with temp and ethylene
+    shelf_life = 200.0 - (temps - 15) * 5.0 - \
+        np.array(ethylene_emissions) * 10.0
+    shelf_life = np.clip(shelf_life, 10.0, 200.0)
+
     df = pd.DataFrame({
         "timestamp_hour": time_series,
         "temperature_c": temps,
@@ -58,8 +65,8 @@ def generate_mock_usda_dataset(output_path):
         "ethylene_ppm": ethylene_emissions,
         "variance_of_laplacian": variance,
         "mean_intensity": intensity,
-        "pidr": current_ethylene * 0.1,  # Mock target validation
-        "actual_shelf_life_hours": np.random.uniform(10, 200, total_records)
+        "pidr": pidr_list,
+        "actual_shelf_life_hours": shelf_life
     })
 
     df.to_csv(output_path, index=False)

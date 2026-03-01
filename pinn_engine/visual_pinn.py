@@ -85,7 +85,7 @@ def _try_load_cnn() -> None:
             return   # weights not trained yet — fall back to thresholds
         model = _PathogenCNN()
         model.load_state_dict(
-            torch.load(_CNN_MODEL_PATH, map_location="cpu", weights_only=True)
+            torch.load(_CNN_MODEL_PATH, map_location="cuda", weights_only=True)
         )
         model.eval()
         norms = np.load(_CNN_NORM_PATH)

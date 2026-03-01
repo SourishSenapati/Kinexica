@@ -9,8 +9,8 @@ from torch import nn
 from torch.utils.data import DataLoader, TensorDataset
 import pandas as pd
 
-# Use CUDA if available
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+# Force CUDA
+device = torch.device('cuda')
 
 
 class PINNModel(nn.Module):
@@ -21,19 +21,24 @@ class PINNModel(nn.Module):
     def __init__(self):
         super(PINNModel, self).__init__()
         # inputs: Temp, Humidity, Ethylene, CV_Variance, CV_Intensity
-        self.fc1 = nn.Linear(5, 64)
-        self.fc2 = nn.Linear(64, 128)
-        self.fc3 = nn.Linear(128, 64)
-        self.out_pidr = nn.Linear(64, 1)        # Output 1: PIDR (Proxy for k)
-        self.out_shelf = nn.Linear(64, 1)       # Output 2: Shelf life
+        self.bn_in = nn.BatchNorm1d(5)
+        self.fc1 = nn.Linear(5, 256)
+        self.bn1 = nn.BatchNorm1d(256)
+        self.fc2 = nn.Linear(256, 512)
+        self.bn2 = nn.BatchNorm1d(512)
+        self.fc3 = nn.Linear(512, 128)
+        self.bn3 = nn.BatchNorm1d(128)
+        self.out_pidr = nn.Linear(128, 1)        # Output 1: PIDR (Proxy for k)
+        self.out_shelf = nn.Linear(128, 1)       # Output 2: Shelf life
 
         self.relu = nn.ReLU()
 
     def forward(self, x):
         """ Forward pass """
-        x = self.relu(self.fc1(x))
-        x = self.relu(self.fc2(x))
-        x = self.relu(self.fc3(x))
+        x = self.bn_in(x)
+        x = self.relu(self.bn1(self.fc1(x)))
+        x = self.relu(self.bn2(self.fc2(x)))
+        x = self.relu(self.bn3(self.fc3(x)))
         pidr = self.out_pidr(x)
         shelf = self.out_shelf(x)
         return pidr, shelf
@@ -70,15 +75,19 @@ def train_model():
     loader = DataLoader(dataset, batch_size=256, shuffle=True)
 
     model = PINNModel().to(device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    criterion_mse = nn.MSELoss()
+    optimizer = torch.optim.AdamW(model.parameters(), lr=0.05)
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+        optimizer, patience=10, factor=0.5)
+
+    def mape_loss(pred, target):
+        return torch.mean(torch.abs((pred - target) / (target.abs() + 1e-5)))
 
     model_save_path_pinn = os.path.join(
         base_dir, "pinn_engine", "kinexica_pinn.pth")
     model_save_path_visual = os.path.join(
         base_dir, "pinn_engine", "visual_pinn.pth")
 
-    epochs = 500
+    epochs = 20000
     print(
         f"Beginning 5-Tier CV+PINN training on {device}... (Ctrl+C to stop and save)")
 
@@ -87,6 +96,10 @@ def train_model():
             model.train()
             epoch_loss = 0.0
 
+            # Approximation proxy for "accuracy"
+            correct_preds = 0
+            total_preds = 0
+
             for batch_X, batch_y_pidr, batch_y_shelf in loader:
                 optimizer.zero_grad()
 
@@ -94,19 +107,45 @@ def train_model():
                 pred_pidr, pred_shelf = model(batch_X)
 
                 # Data-driven Loss
-                loss_pidr = criterion_mse(pred_pidr, batch_y_pidr)
-                loss_shelf = criterion_mse(pred_shelf, batch_y_shelf)
+                loss_pidr = mape_loss(pred_pidr, batch_y_pidr)
+                loss_shelf = mape_loss(pred_shelf, batch_y_shelf)
 
                 # Total loss (can heavily weigh PIDR vs Shelf Life)
-                total_loss = loss_pidr + (loss_shelf * 0.01)
+                total_loss = loss_pidr + loss_shelf
 
                 total_loss.backward()
                 optimizer.step()
 
                 epoch_loss += total_loss.item()
 
+            # Evaluate exact deterministic accuracy outside of train() running stats
+            model.eval()
+            with torch.no_grad():
+                correct_preds = 0
+                total_preds = 0
+                for batch_X, batch_y_pidr, batch_y_shelf in loader:
+                    pred_pidr, pred_shelf = model(batch_X)
+                    mask_pidr = torch.abs(
+                        pred_pidr - batch_y_pidr) < (0.05 * batch_y_pidr.abs() + 1e-5)
+                    mask_shelf = torch.abs(
+                        pred_shelf - batch_y_shelf) < (0.05 * batch_y_shelf.abs() + 1e-5)
+                    correct_preds += (mask_pidr & mask_shelf).sum().item()
+                    total_preds += batch_X.size(0)
+
             avg_loss = epoch_loss / len(loader)
-            print(f"Epoch {epoch+1}/{epochs} | Total Loss: {avg_loss:.4f}")
+            accuracy = (correct_preds / total_preds) * \
+                100.0 if total_preds > 0 else 0.0
+
+            scheduler.step(avg_loss)
+
+            print(
+                f"Epoch {epoch+1}/{epochs} | "
+                f"Total Loss: {avg_loss:.4f} | Accuracy: {accuracy:.4f}%"
+            )
+
+            if accuracy >= 99.999:
+                print(f"Reached 99.999% accuracy! Stopping at epoch {epoch+1}")
+                break
 
     except KeyboardInterrupt:
         print("\n\n[WARNING] Training Interrupted via Keyboard.")
