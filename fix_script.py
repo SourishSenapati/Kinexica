@@ -1,3 +1,4 @@
+"""Script to apply text replacements and fix syntax issues globally."""
 import os
 import re
 
@@ -33,7 +34,7 @@ try:
     with open('LICENSE', 'w', encoding='utf-8') as f:
         f.write(content)
     print("Fixed LICENSE MD030")
-except BaseException as e:
+except OSError as e:
     print('LICENSE error:', e)
 
 # 3. main.py Unused BaseModel, Import outside toplevel
@@ -57,7 +58,7 @@ try:
     with open('main.py', 'w', encoding='utf-8') as f:
         f.write(content)
     print("Fixed main.py issues")
-except BaseException as e:
+except OSError as e:
     print('main.py error:', e)
 
 # 4. pinn_engine/train_pinn.py f-string without interp
@@ -73,7 +74,7 @@ try:
     with open('pinn_engine/train_pinn.py', 'w', encoding='utf-8') as f:
         f.write(content)
     print("Fixed train_pinn.py f-strings")
-except BaseException as e:
+except OSError as e:
     print('train_pinn.py error:', e)
 
 # 5. pinn_engine/data_scraper.py line length
@@ -88,7 +89,7 @@ try:
     with open('pinn_engine/data_scraper.py', 'w', encoding='utf-8') as f:
         f.writelines(lines)
     print("Fixed data_scraper.py line length")
-except BaseException as e:
+except OSError as e:
     pass
 
 # 6. pinn_engine/inference.py line length
@@ -102,7 +103,7 @@ try:
     with open('pinn_engine/inference.py', 'w', encoding='utf-8') as f:
         f.writelines(lines)
     print("Fixed inference.py line length")
-except BaseException as e:
+except OSError as e:
     pass
 
 print("All fixes applied!")

@@ -74,7 +74,8 @@ def align_and_standardize(input_path, output_path):
     print(f"\n[Alignment Agent] Ingesting raw dataset from {input_path}")
     df_raw = pd.read_csv(input_path)
 
-    # Mathematical standard requirement: [Time, Temp, Humidity, Ethylene, Variance, Intensity, Targets]
+    # Mathematical standard requirement:
+    # [Time, Temp, Humidity, Ethylene, Variance, Intensity, Targets]
     required_columns = ["timestamp_hour", "temperature_c",
                         "humidity_percent", "ethylene_ppm",
                         "variance_of_laplacian", "mean_intensity",

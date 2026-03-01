@@ -110,14 +110,14 @@ def train_model():
 
     except KeyboardInterrupt:
         print("\n\n[WARNING] Training Interrupted via Keyboard.")
-        print(f"Triggering SAVE ON INTERRUPT protocol. Saving weights...")
+        print("Triggering SAVE ON INTERRUPT protocol. Saving weights...")
         torch.save(model.state_dict(), model_save_path_pinn)
         torch.save(model.state_dict(), model_save_path_visual)
         print("Weights saved successfully. Exiting gracefully.")
         return
 
     # Save standard upon completion
-    print(f"\nTraining Complete! Saving dual-weights...")
+    print("\nTraining Complete! Saving dual-weights...")
     torch.save(model.state_dict(), model_save_path_pinn)
     torch.save(model.state_dict(), model_save_path_visual)
     print("Done.")

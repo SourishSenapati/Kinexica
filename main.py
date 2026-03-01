@@ -1,9 +1,11 @@
-from pinn_engine.inference import run_inference
-# pylint: disable=import-error, no-member, redefined-outer-name, unused-argument
 """
 Main Orchestrator: FastAPI Backend & Zero-Cost SQLite Database.
 Acts as the central Source of Truth.
 """
+# pylint: disable=import-error, no-member, redefined-outer-name, unused-argument, wrong-import-position
+
+from pinn_engine.inference import run_inference
+from agent_broker.negotiation_agent import trigger_negotiation_swarm
 import asyncio
 import os
 import sys
@@ -11,14 +13,12 @@ import threading
 
 import pandas as pd
 from fastapi import BackgroundTasks, FastAPI
-
 from sqlalchemy import Column, Float, Integer, String, create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-from agent_broker.negotiation_agent import trigger_negotiation_swarm
-
 # Ensure local imports work
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 
 # --- 1. SQLite FOSS Database Setup ---
 DATABASE_URL = "sqlite:///./inventory.db"
@@ -67,9 +67,17 @@ app_state = AppState()
 
 def mock_pinn_inference(row):
     """
-    Mocks a PINN inference by extracting the expected output.
+    Executes actual PINN inference via run_inference instead of mocked data, 
+    utilizing dynamic environmental and CV parameters.
     """
-    return row['actual_shelf_life_hours']
+    res = run_inference(
+        temp=row.get('temperature_c', 0.0),
+        humidity=row.get('humidity_percent', 0.0),
+        ethylene=row.get('ethylene_ppm', 0.0),
+        cv_variance=row.get('variance_of_laplacian', 1000.0),
+        cv_intensity=row.get('mean_intensity', 150.0)
+    )
+    return res.get("predicted_shelf_life_hours", row.get('actual_shelf_life_hours', 100.0))
 
 # --- 3. Monitoring Loop ---
 

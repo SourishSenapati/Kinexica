@@ -8,7 +8,10 @@ import torch
 from pinn_engine.train_pinn import PINNModel
 
 
-def run_inference(temp: float, humidity: float, ethylene: float, cv_variance: float = 1000.0, cv_intensity: float = 100.0) -> dict:
+def run_inference(
+    temp: float, humidity: float, ethylene: float, cv_variance: float = 1000.0,
+    cv_intensity: float = 100.0
+) -> dict:
     """
     Run the trained Physics-Informed Neural Network to predict PIDR 
     and estimated shelf life based on environmental telemetry and vision features.

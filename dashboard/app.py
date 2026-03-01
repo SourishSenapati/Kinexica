@@ -3,17 +3,18 @@
 SpoilSense Edge Client: Real-time UI dashboard rendered using Flet.
 Includes Phase 12 Monetization Engine 3-Tiers: B2B QA Gateway, B2C Mobile Lens, B2G Heatmap.
 """
-from pinn_engine.visual_pinn import analyze_lesion_kinetics
-from pinn_engine.syndi_trust import apply_synthid_watermark
 import asyncio
-import os
 import requests
 import flet as ft
-from sys import path
-path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from pinn_engine.syndi_trust import apply_synthid_watermark
+from pinn_engine.visual_pinn import analyze_lesion_kinetics
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
-API_BASE_URL = os.getenv("API_BASE_URL", "https://real-cougars-attack.loca.lt")
+API_BASE_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:8000")
 
 # Hierarchy of Darkness palette
 BG_DARK_0 = "#040405"  # Deepest background
@@ -134,7 +135,7 @@ def main(page: ft.Page):
             else:
                 lens_status.color = ACCENT_GREEN
                 lens_status.value = "VERIFIED: Baseline Biological Kinetics\n[SyndiTrust Secured]"
-        except Exception as e:
+        except Exception:
             pass
         page.update()
 
@@ -150,15 +151,25 @@ def main(page: ft.Page):
     b2g_title = ft.Text("Bio-Security Maps", size=26,
                         weight=ft.FontWeight.W_800, color=TEXT_PRIMARY)
     b2g_sub = ft.Text("B2G Intelligence Hub", size=14, color=TEXT_SECONDARY)
-    b2g_data = ft.Text("Monitoring secure geographic nodes...",
-                       size=14, color=TEXT_SECONDARY, italic=True)
+    # Display an actual map visualizing the asset location
+    map_lat, map_lng = 40.7128, -74.0060  # Initial coords
+    map_url = f"https://static-maps.yandex.ru/1.x/?ll={map_lng},{map_lat}&z=11&l=map&size=350,200&pt={map_lng},{map_lat},pm2rdm"
+
+    b2g_data = ft.Container(
+        content=ft.Image(src=map_url, width=350,
+                         height=200, fit=ft.BoxFit.COVER),
+        border_radius=12, padding=5, bgcolor=BG_DARK_2, border=ft.border.all(1, BG_DARK_3),
+        shadow=ft.BoxShadow(spread_radius=1, blur_radius=10, color=BG_DARK_0)
+    )
 
     b2g_alerts = ft.ListView(expand=True, spacing=15, height=300)
 
     def construct_alert(icon, text, badge_color):
         return ft.Container(
-            content=ft.Row([ft.Icon(icon, color=badge_color, size=20), ft.Text(
-                text, size=13, color=TEXT_PRIMARY, expand=True)]),
+            content=ft.Row([
+                ft.Icon(icon, color=badge_color, size=20),
+                ft.Text(text, size=13, color=TEXT_PRIMARY, expand=True)
+            ]),
             bgcolor=BG_DARK_2, border=ft.border.all(1, BG_DARK_3), border_radius=12, padding=15
         )
 
@@ -167,44 +178,63 @@ def main(page: ft.Page):
     b2g_alerts.controls.append(construct_alert(
         "eco_outlined", "Elevated Penicillium traces in local watershed", "#fbbf24"))
 
-    # TABS
-    t = ft.Tabs(
-        selected_index=0,
-        animation_duration=300,
-        unselected_label_color=TEXT_SECONDARY,
-        label_color=ACCENT_BLUE,
-        indicator_color=ACCENT_BLUE,
-        divider_color=BG_DARK_3,
-        overlay_color=BG_DARK_2,
-        tabs=[
-            ft.Tab(
-                text="HUB",
-                content=ft.Container(
-                    ft.Column([ft.Divider(height=10, color="transparent"), title, subtitle, ft.Divider(height=20, color="transparent"), status_card, ft.Divider(
-                        height=10, color="transparent"), b2b_start_btn], alignment=ft.MainAxisAlignment.START, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-                    padding=10
-                )
-            ),
-            ft.Tab(
-                text="LENS",
-                content=ft.Container(
-                    ft.Column([ft.Divider(height=10, color="transparent"), lens_title, lens_sub, ft.Divider(height=10, color="transparent"), lens_image_container, ft.Divider(
-                        height=10, color="transparent"), scan_btn, lens_status, ft.Divider(height=10, color="transparent"), lens_gps], alignment=ft.MainAxisAlignment.START, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-                    padding=10
-                )
-            ),
-            ft.Tab(
-                text="MAPS",
-                content=ft.Container(
-                    ft.Column([ft.Divider(height=10, color="transparent"), b2g_title, b2g_sub, ft.Divider(height=20, color="transparent"),
-                              b2g_data, b2g_alerts], alignment=ft.MainAxisAlignment.START, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-                    padding=10
-                )
-            ),
-        ],
-        expand=1,
+    b2g_prediction_text = ft.Text("Live Target Node Shelf Life: AWAITING...",
+                                  size=15, color=ACCENT_GREEN, weight=ft.FontWeight.W_600)
+
+    # TABS (Custom Navigation)
+    hub_content = ft.Container(
+        ft.Column([ft.Divider(height=10, color="transparent"), title, subtitle, ft.Divider(height=20, color="transparent"), status_card, ft.Divider(
+            height=10, color="transparent"), b2b_start_btn], alignment=ft.MainAxisAlignment.START, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+        padding=10, visible=True
     )
-    page.add(t)
+
+    lens_content = ft.Container(
+        ft.Column([ft.Divider(height=10, color="transparent"), lens_title, lens_sub, ft.Divider(height=10, color="transparent"), lens_image_container, ft.Divider(
+            height=10, color="transparent"), scan_btn, lens_status, ft.Divider(height=10, color="transparent"), lens_gps], alignment=ft.MainAxisAlignment.START, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+        padding=10, visible=False
+    )
+
+    maps_content = ft.Container(
+        ft.Column([ft.Divider(height=10, color="transparent"), b2g_title, b2g_sub, ft.Divider(height=10, color="transparent"), b2g_data, ft.Divider(height=5, color="transparent"), b2g_prediction_text, b2g_alerts],
+                  alignment=ft.MainAxisAlignment.START, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+        padding=10, visible=False
+    )
+
+    def switch_tab(e):
+        hub_content.visible = e.control.data == "hub"
+        lens_content.visible = e.control.data == "lens"
+        maps_content.visible = e.control.data == "maps"
+        for c in nav_row.controls:  # pylint: disable=not-an-iterable
+            if hasattr(c, "data") and c.data:
+                c.bgcolor = BG_DARK_3 if c.data == e.control.data else "transparent"
+                c.border = ft.border.all(
+                    1, ACCENT_BLUE if c.data == e.control.data else "transparent")
+                c.content.color = TEXT_PRIMARY if c.data == e.control.data else TEXT_SECONDARY
+                c.content.weight = ft.FontWeight.W_800 if c.data == e.control.data else ft.FontWeight.NORMAL
+        page.update()
+
+    def make_nav_btn(text, data, is_active=False):
+        return ft.Container(
+            content=ft.Text(text, color=TEXT_PRIMARY if is_active else TEXT_SECONDARY,
+                            weight=ft.FontWeight.W_800 if is_active else ft.FontWeight.NORMAL),
+            padding=ft.padding.symmetric(10, 20),
+            bgcolor=BG_DARK_3 if is_active else "transparent",
+            border_radius=8,
+            border=ft.border.all(
+                1, ACCENT_BLUE if is_active else "transparent"),
+            data=data,
+            ink=True,
+            on_click=switch_tab
+        )
+
+    nav_row = ft.Row([
+        make_nav_btn("HUB", "hub", True),
+        make_nav_btn("LENS", "lens", False),
+        make_nav_btn("MAPS", "maps", False)
+    ], alignment=ft.MainAxisAlignment.CENTER)
+
+    page.add(nav_row, ft.Divider(color=BG_DARK_3, height=2), ft.Stack(
+        [hub_content, lens_content, maps_content], expand=True))
 
     # Original B2B Polling Loop
     async def poll_backend():
@@ -220,6 +250,7 @@ def main(page: ft.Page):
                         temp_text.value = f"{data['current_temp_c']} °C"
                         ethylene_text.value = f"{data['ethylene_ppm']} ppm"
                         shelf_life_text.value = f"{data['estimated_shelf_life_h']:.1f} hrs"
+                        b2g_prediction_text.value = f"Live Target Node Shelf Life: {data['estimated_shelf_life_h']:.1f} hrs"
                         status = data['status']
                         status_text.value = f"STATUS: {status.upper()}"
 
@@ -254,4 +285,4 @@ def main(page: ft.Page):
 
 
 if __name__ == "__main__":
-    ft.app(target=main)
+    ft.app(target=main, view=ft.AppView.WEB_BROWSER, port=8502)
