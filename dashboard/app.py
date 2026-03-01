@@ -139,7 +139,7 @@ def main(page: ft.Page):
         page.update()
 
     scan_btn = ft.Container(
-        content=ft.Row([ft.Icon(ft.icons.CAMERA_OUTLINED, color=TEXT_PRIMARY), ft.Text(
+        content=ft.Row([ft.Icon("camera_alt_outlined", color=TEXT_PRIMARY), ft.Text(
             "CAPTURE MATRIX", color=TEXT_PRIMARY, weight=ft.FontWeight.BOLD, size=14)], alignment=ft.MainAxisAlignment.CENTER),
         width=320, bgcolor=ACCENT_PURPLE, border_radius=12, padding=15, ink=True, on_click=trigger_lens_scan,
         shadow=ft.BoxShadow(
@@ -163,9 +163,9 @@ def main(page: ft.Page):
         )
 
     b2g_alerts.controls.append(construct_alert(
-        ft.icons.PUPCATCH_OUTLINED, "Botrytis cinerea outbreak detected in Sector 4", ACCENT_RED))
+        "bug_report_outlined", "Botrytis cinerea outbreak detected in Sector 4", ACCENT_RED))
     b2g_alerts.controls.append(construct_alert(
-        ft.icons.NATURE_OUTLINED, "Elevated Penicillium traces in local watershed", "#fbbf24"))
+        "eco_outlined", "Elevated Penicillium traces in local watershed", "#fbbf24"))
 
     # TABS
     t = ft.Tabs(
