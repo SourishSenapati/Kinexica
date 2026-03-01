@@ -1,0 +1,86 @@
+{
+  "pinn_model": {
+    "regression": {
+      "r2": 0.8053,
+      "r2_pct": 80.53,
+      "rmse_hrs": 24.11,
+      "mae_hrs": 18.04,
+      "mape_pct": 30.75,
+      "accuracy_pct": 69.25
+    },
+    "sigma_analysis": {
+      "sigma": 24.1139,
+      "w1s_pct": 72.72,
+      "w2s_pct": 93.96,
+      "w3s_pct": 99.16,
+      "gaussian_fit_ok": true
+    },
+    "distress_classifier": {
+      "precision": 0.8895,
+      "recall": 0.9279,
+      "f1": 0.9083,
+      "specificity": 0.8294,
+      "accuracy": 0.8882,
+      "mcc": 0.7664,
+      "tp": 2769,
+      "fp": 344,
+      "fn": 215,
+      "tn": 1672
+    },
+    "samples": 5000
+  },
+  "visual_pinn": {
+    "pathogen_detector": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "specificity": 1.0,
+      "accuracy": 1.0,
+      "mcc": 1.0,
+      "tp": 244,
+      "fp": 0,
+      "fn": 0,
+      "tn": 256
+    },
+    "fraud_detector": {
+      "precision": 1.0,
+      "recall": 0.8604,
+      "f1": 0.9249,
+      "specificity": 1.0,
+      "accuracy": 0.926,
+      "mcc": 0.8622,
+      "tp": 228,
+      "fp": 0,
+      "fn": 37,
+      "tn": 235
+    },
+    "synthetic_samples": 500
+  },
+  "arrhenius_baseline": {
+    "regression": {
+      "r2": -0.1044,
+      "rmse_hrs": 57.44,
+      "mae_hrs": 48.8,
+      "mape_pct": 88.61
+    },
+    "sigma_analysis": {
+      "sigma": 56.8235,
+      "w1s_pct": 60.16,
+      "w2s_pct": 98.66,
+      "w3s_pct": 100.0,
+      "gaussian_fit_ok": true
+    },
+    "distress_classifier": {
+      "precision": 0.596,
+      "recall": 0.9477,
+      "f1": 0.7318,
+      "specificity": 0.0491,
+      "accuracy": 0.5854,
+      "mcc": -0.0071,
+      "tp": 2828,
+      "fp": 1917,
+      "fn": 156,
+      "tn": 99
+    }
+  }
+}

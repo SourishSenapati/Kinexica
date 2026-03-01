@@ -44,10 +44,23 @@ sys.path.insert(0, BASE)
 
 # ── Metric helpers ──────────────────────────────────────────────────────────
 
+class _NumpyEncoder(json.JSONEncoder):
+    """Makes numpy scalars JSON-serialisable."""
+
+    def default(self, o):  # pylint: disable=arguments-renamed
+        if isinstance(o, (np.integer,)):
+            return int(o)
+        if isinstance(o, (np.floating,)):
+            return float(o)
+        if isinstance(o, np.ndarray):
+            return o.tolist()
+        return super().default(o)
+
+
 def r2(y, p):
     ss_res = np.sum((y - p) ** 2)
     ss_tot = np.sum((y - np.mean(y)) ** 2)
-    return 1.0 - ss_res / (ss_tot + 1e-12)
+    return float(1.0 - ss_res / (ss_tot + 1e-12))
 
 
 def rmse(y, p): return float(np.sqrt(np.mean((y - p) ** 2)))
@@ -382,7 +395,7 @@ def run_all(export: bool = False) -> dict:
         os.makedirs(report_dir, exist_ok=True)
         out_path = os.path.join(report_dir, "kpis.json")
         with open(out_path, "w", encoding="utf-8") as fh:
-            json.dump(report, fh, indent=2)
+            json.dump(report, fh, indent=2, cls=_NumpyEncoder)
         print(f"  [EXPORT] Report saved → {out_path}")
 
     return report
