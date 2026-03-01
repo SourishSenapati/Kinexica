@@ -43,10 +43,79 @@ Authors: Kinexica R&D Team
 import os
 import time
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Optional
 
 import cv2
 import numpy as np
+
+# ── CNN fusion (optional — activates automatically when pathogen_cnn.pth exists)
+_CNN_MODEL = None
+_CNN_X_MEAN = None
+_CNN_X_STD = None
+_CNN_LOADED = False
+
+
+def _try_load_cnn() -> None:
+    """Lazy-load the PathogenCNN model weights once."""
+    global _CNN_MODEL, _CNN_X_MEAN, _CNN_X_STD, _CNN_LOADED  # pylint: disable=global-statement
+    if _CNN_LOADED:
+        return
+    _CNN_LOADED = True
+    try:
+        import torch  # noqa
+        import torch.nn.functional as F  # noqa
+        from pinn_engine.pathogen_cnn import PathogenCNN, MODEL_PATH, NORM_PATH, FEATURE_KEYS  # noqa
+        if not (os.path.exists(MODEL_PATH) and os.path.exists(NORM_PATH)):
+            return   # weights not trained yet — fall back to thresholds
+        model = PathogenCNN()
+        model.load_state_dict(
+            torch.load(MODEL_PATH, map_location="cpu", weights_only=True)
+        )
+        model.eval()
+        norms = np.load(NORM_PATH)
+        _CNN_MODEL = model
+        _CNN_X_MEAN = norms["x_mean"]
+        _CNN_X_STD = norms["x_std"]
+    except Exception:  # pylint: disable=broad-except
+        pass   # silently degrade to threshold-only mode
+
+
+def _cnn_classify(feats: dict) -> Optional[dict]:
+    """
+    Run PathogenCNN inference on the extracted feature vector.
+    Returns None if the model is not available.
+    Returns dict: {class_id, class_name, confidence, is_pathogen, is_fraud, top3}
+    """
+    _try_load_cnn()
+    if _CNN_MODEL is None:
+        return None
+    try:
+        import torch  # noqa
+        import torch.nn.functional as F  # noqa
+        from pinn_engine.pathogen_cnn import FEATURE_KEYS  # noqa
+        x_raw = np.array(
+            [[feats.get(k, 0.0) for k in FEATURE_KEYS]], dtype=np.float32
+        )
+        x_norm = (x_raw - _CNN_X_MEAN) / (_CNN_X_STD + 1e-8)
+        x_t = torch.tensor(x_norm, dtype=torch.float32)
+        with torch.no_grad():
+            logits = _CNN_MODEL(x_t)
+            probs = F.softmax(logits, dim=1).numpy()[0]
+        top_id = int(np.argmax(probs))
+        sorted3 = sorted(enumerate(probs),
+                         key=lambda kv: kv[1], reverse=True)[:3]
+        from pinn_engine.pathogen_cnn import CLASS_NAMES  # noqa
+        return {
+            "class_id":   top_id,
+            "class_name": CLASS_NAMES[top_id],
+            "confidence": float(probs[top_id]),
+            "top3":       [(CLASS_NAMES[i], float(p)) for i, p in sorted3],
+            "is_pathogen": top_id in (1, 2, 3, 4, 5, 6, 9),
+            "is_fraud":    top_id == 7,
+            "is_pristine": top_id in (0, 8),
+        }
+    except Exception:  # pylint: disable=broad-except
+        return None
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -621,6 +690,61 @@ def analyze_lesion_kinetics(
     result.fraud_types = f_types
     result.fraud_confidence = f_conf
 
+    # ── CNN Fusion (runs when pathogen_cnn.pth is trained & available) ────────
+    cnn_result = _cnn_classify(feats)
+
+    if cnn_result is not None:
+        # CNN confidence-weighted override (0.65 CNN + 0.35 threshold)
+        cnn_conf = cnn_result["confidence"]
+        cnn_is_path = cnn_result["is_pathogen"]
+        cnn_is_fraud = cnn_result["is_fraud"]
+
+        # Upgrade pathogen species list when CNN is confident enough
+        if cnn_is_path and cnn_conf >= 0.60:
+            p_det = True
+            # Replace/augment species with CNN-identified species name
+            cnn_species = cnn_result["class_name"]
+            if cnn_species not in p_species:
+                p_species = [cnn_species] + p_species[:1]
+            # Fuse confidence: weighted average
+            p_conf = round(0.65 * cnn_conf + 0.35 * p_conf, 4)
+            # CNN decides severity when highly confident
+            if cnn_conf >= 0.80:
+                p_sev = "Critical" if cnn_conf >= 0.90 else "High"
+                p_color = "red"
+
+        # Upgrade fraud detection when CNN flags it
+        if cnn_is_fraud and cnn_conf >= 0.60:
+            f_det = True
+            f_conf = round(0.65 * cnn_conf + 0.35 * f_conf, 4)
+            if not f_types:
+                f_types = [
+                    "Chemical Fraud (CaC₂ / dye / formalin) — CNN confirmed"]
+            if cnn_conf >= 0.80:
+                f_sev = "Critical"
+                f_color = "purple"
+
+        # Propagate updated values back to result
+        result.pathogen_detected = p_det
+        result.pathogen_species = p_species
+        result.pathogen_confidence = p_conf
+        result.fraud_detected = f_det
+        result.fraud_types = f_types
+        result.fraud_confidence = f_conf
+
+        # Attach CNN metadata fields to result dict (will be added at end)
+        result.__dict__["cnn_available"] = True
+        result.__dict__["cnn_class_name"] = cnn_result["class_name"]
+        result.__dict__["cnn_confidence"] = round(cnn_conf, 4)
+        result.__dict__["cnn_top3"] = [
+            {"class": c, "prob": round(p, 4)} for c, p in cnn_result["top3"]
+        ]
+    else:
+        result.__dict__["cnn_available"] = False
+        result.__dict__["cnn_class_name"] = None
+        result.__dict__["cnn_confidence"] = None
+        result.__dict__["cnn_top3"] = []
+
     # ── Compose final verdict ──────────────────────────────────
     if f_det and f_sev in ("Critical", "High"):
         result.classification = f"FRAUD DETECTED — {', '.join(f_types[:2])}"
@@ -654,7 +778,13 @@ def analyze_lesion_kinetics(
         p_det, f_det, p_sev, f_sev, p_species, f_types
     )
 
-    return result.to_dict()
+    # Build output dict and inject CNN fields
+    out = result.to_dict()
+    out["cnn_available"] = result.__dict__.get("cnn_available", False)
+    out["cnn_class_name"] = result.__dict__.get("cnn_class_name")
+    out["cnn_confidence"] = result.__dict__.get("cnn_confidence")
+    out["cnn_top3"] = result.__dict__.get("cnn_top3", [])
+    return out
 
 
 # ─────────────────────────────────────────────────────────────────────────────

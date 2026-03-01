@@ -293,14 +293,134 @@ def lens_archetypes():
     }
 
 
+# ── Logistics Endpoints ───────────────────────────────────────────────────────
+
+@app.post("/logistics/plan")
+def logistics_plan(payload: dict):
+    """
+    Single-leg logistics dispatch plan.
+    POST body:
+      {
+        "asset_id": "Pallet-T8",
+        "origin": {"name":"Nashik Tomato Farm","lat":19.9975,"lon":73.7898},
+        "destination": {"name":"Snowman Logistics Mumbai","lat":19.1136,"lon":72.8697},
+        "mass_kg": 2500,
+        "remaining_shelf_h": 22.0,
+        "pidr": 0.0078,
+        "base_price_inr": 125000,
+        "cold_chain": true
+      }
+    """
+    from pinn_engine.logistics_model import plan_dispatch, GeoNode  # pylint: disable=import-outside-toplevel
+    origin_d = payload.get("origin", {})
+    dest_d = payload.get("destination", {})
+    origin = GeoNode(
+        origin_d.get("id", "o"), origin_d.get("name", "Origin"),
+        float(origin_d.get("lat", 0)), float(origin_d.get("lon", 0)),
+        origin_d.get("type", "farm")
+    )
+    dest = GeoNode(
+        dest_d.get("id", "d"), dest_d.get("name", "Destination"),
+        float(dest_d.get("lat", 0)), float(dest_d.get("lon", 0)),
+        dest_d.get("type", "warehouse")
+    )
+    result = plan_dispatch(
+        asset_id=payload.get("asset_id", "unknown"),
+        origin=origin,
+        destination=dest,
+        mass_kg=float(payload.get("mass_kg", 1000)),
+        remaining_shelf_h=float(payload.get("remaining_shelf_h", 48)),
+        pidr=float(payload.get("pidr", 0.0)),
+        base_price_inr=float(payload.get("base_price_inr", 0)),
+        cold_chain=bool(payload.get("cold_chain", True)),
+    )
+    return result.to_dict()
+
+
+@app.post("/logistics/multi-stop")
+def logistics_multi_stop(payload: dict):
+    """
+    Multi-stop optimised route plan (Nearest-Neighbour TSP).
+    POST body adds "stops": [{name, lat, lon, type}, ...] instead of a single destination.
+    """
+    from pinn_engine.logistics_model import (  # pylint: disable=import-outside-toplevel
+        plan_multi_stop_dispatch, GeoNode
+    )
+    origin_d = payload.get("origin", {})
+    origin = GeoNode(
+        origin_d.get("id", "o"), origin_d.get("name", "Origin"),
+        float(origin_d.get("lat", 0)), float(origin_d.get("lon", 0))
+    )
+    stops = [
+        GeoNode(s.get("id", f"s{i}"), s.get("name", f"Stop {i}"),
+                float(s.get("lat", 0)), float(s.get("lon", 0)),
+                s.get("type", "warehouse"))
+        for i, s in enumerate(payload.get("stops", []))
+    ]
+    return plan_multi_stop_dispatch(
+        asset_id=payload.get("asset_id", "unknown"),
+        origin=origin,
+        stops=stops,
+        mass_kg=float(payload.get("mass_kg", 1000)),
+        remaining_shelf_h=float(payload.get("remaining_shelf_h", 48)),
+        pidr=float(payload.get("pidr", 0.0)),
+        base_price_inr=float(payload.get("base_price_inr", 0)),
+        cold_chain=bool(payload.get("cold_chain", True)),
+    )
+
+
+@app.get("/logistics/nodes")
+def logistics_nodes():
+    """Return all seeded India supply chain nodes."""
+    from pinn_engine.logistics_model import INDIA_NODES  # pylint: disable=import-outside-toplevel
+    return {
+        k: {"name": v.name, "lat": v.lat, "lon": v.lon, "type": v.node_type}
+        for k, v in INDIA_NODES.items()
+    }
+
+
+# ── PathogenCNN Direct Inference Endpoint ─────────────────────────────────────
+
+@app.post("/pathogen/predict")
+def pathogen_predict(payload: dict):
+    """
+    Run PathogenCNN inference directly on a feature vector (no image needed).
+    Useful for edge devices that only send extracted features.
+
+    POST body (all 9 features):
+      {
+        "diffusion_var": 3500,
+        "mean_intensity": 95,
+        "entropy": 6.2,
+        "edge_density": 0.15,
+        "dominant_hue": 12,
+        "mean_saturation": 80,
+        "contour_count": 4,
+        "lesion_area_pct": 28.5,
+        "spore_score": 3.1
+      }
+    """
+    from pinn_engine.pathogen_cnn import predict_from_features  # pylint: disable=import-outside-toplevel
+    try:
+        return predict_from_features(payload)
+    except FileNotFoundError as exc:
+        return {"error": str(exc), "hint": "Train PathogenCNN first: python pinn_engine/pathogen_cnn.py --train"}
+
+
+@app.get("/pathogen/classes")
+def pathogen_classes():
+    """Return all 10 PathogenCNN class labels."""
+    from pinn_engine.pathogen_cnn import CLASS_NAMES  # pylint: disable=import-outside-toplevel
+    return {str(i): name for i, name in enumerate(CLASS_NAMES)}
+
+
 if __name__ == "__main__":
     import uvicorn
-    # Application Lifespan Events
     print("\n[AI BROKER] Initializing Swarm Infrastructure...")
     print("[AI BROKER] Supply Chain Routing Agent successfully loaded tools:")
     print("   - Calculate Biomass Carbon Yield")
     print("   - Dispatch Gig Driver")
-    print("   - Calculate Dynamic Shelf Price\n")
-
-    # FOSS tunnel binds to 8000 natively.
+    print("   - Calculate Dynamic Shelf Price")
+    print("[LOGISTICS] Haversine routing + dispatch model online")
+    print("[LENS] Visual-PINN v3 + PathogenCNN fusion active\n")
     uvicorn.run(app, host="127.0.0.1", port=8000)
