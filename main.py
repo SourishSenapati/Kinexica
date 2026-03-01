@@ -236,6 +236,63 @@ def ingest_sensor_data(payload: dict):
     return {"status": "success", "predicted_shelf_life": res["predicted_shelf_life_hours"]}
 
 
+# ── Visual-PINN Pathogen & Fraud Detection Endpoints ──────────────────────────
+
+@app.post("/lens/analyze")
+def lens_analyze(payload: dict):
+    """
+    Single-image pathogen and chemical fraud analysis via Visual-PINN v3.
+
+    POST body:
+      {
+        "image_path":    "<absolute or relative path to image>",
+        "crop_archetype": 1   // 1-7 per Universal Crop Matrix
+      }
+
+    Returns full DetectionResult JSON including:
+      - pathogen species, confidence, lesion area
+      - fraud typologies, confidence
+      - physics metrics (laplacian, entropy, edge density, HSV)
+      - recommended_action, regulatory_flag
+    """
+    from pinn_engine.visual_pinn import analyze_lesion_kinetics  # pylint: disable=import-outside-toplevel
+    image_path = payload.get("image_path", "")
+    crop_archetype = int(payload.get("crop_archetype", 1))
+    result = analyze_lesion_kinetics(image_path, crop_archetype)
+    return result
+
+
+@app.post("/lens/batch")
+def lens_batch(payload: dict):
+    """
+    Batch pathogen and fraud analysis across a list of images.
+
+    POST body:
+      {
+        "image_paths":   ["path1.jpg", "path2.jpg"],
+        "crop_archetype": 1
+      }
+
+    Returns list of DetectionResult dicts + aggregate batch summary.
+    """
+    from pinn_engine.visual_pinn import analyze_batch, batch_summary  # pylint: disable=import-outside-toplevel
+    paths = payload.get("image_paths", [])
+    crop_archetype = int(payload.get("crop_archetype", 1))
+    results = analyze_batch(paths, crop_archetype)
+    summary = batch_summary(results)
+    return {"summary": summary, "results": results}
+
+
+@app.get("/lens/archetypes")
+def lens_archetypes():
+    """Return the full Universal Crop Matrix archetype registry."""
+    from pinn_engine.visual_pinn import ARCHETYPES  # pylint: disable=import-outside-toplevel
+    return {
+        str(k): {"name": v["name"], "examples": v["examples"]}
+        for k, v in ARCHETYPES.items()
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
     # Application Lifespan Events
