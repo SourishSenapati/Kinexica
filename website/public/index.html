@@ -1,353 +1,470 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kinexica — Autonomous AI at the Food Spoilage Frontier</title>
-  <meta name="description" content="Kinexica uses Physics-Informed Neural Networks, computer vision, and AI agent swarms to eliminate food spoilage losses and convert perishable decay into compounding revenue." />
-  <meta property="og:title" content="Kinexica — Autonomous AI at the Food Spoilage Frontier" />
-  <meta property="og:description" content="The world's first autonomous end-to-end food spoilage prevention platform." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kinexica — Autonomous AI at the Food Spoilage Frontier</title>
+    <meta name="description"
+        content="Kinexica uses Physics-Informed Neural Networks, computer vision, and AI agent swarms to eliminate food spoilage losses." />
+    <meta property="og:title" content="Kinexica — Autonomous AI at the Food Spoilage Frontier" />
+    <meta property="og:description"
+        content="The world's first autonomous end-to-end food spoilage prevention platform." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-  <!-- ═══════════════════════ NAV ═══════════════════════ -->
-  <nav id="navbar">
-    <div class="nav-inner">
-      <a href="#hero" class="logo" aria-label="Kinexica Home">
-        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-          <circle cx="18" cy="18" r="17" stroke="#10b981" stroke-width="1.5"/>
-          <path d="M18 5 C10 10 8 18 18 18 C28 18 26 26 18 31" stroke="#10b981" stroke-width="2" stroke-linecap="round" fill="none"/>
-          <circle cx="18" cy="18" r="3" fill="#10b981"/>
-        </svg>
-        <span>KINEXICA</span>
-      </a>
-      <ul class="nav-links" id="nav-links">
-        <li><a href="#why-us">Why Us</a></li>
-        <li><a href="#technology">Technology</a></li>
-        <li><a href="#economics">Economics</a></li>
-        <li><a href="#market">Market</a></li>
-        <li><a href="#contact" class="cta-btn">Get Demo</a></li>
-      </ul>
-      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </nav>
+    <!-- NAV -->
+    <nav id="navbar">
+        <div class="nav-inner">
+            <a href="#hero" class="logo" aria-label="Kinexica Home">
+                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+                    <circle cx="18" cy="18" r="17" stroke="#10b981" stroke-width="1.5" />
+                    <path d="M18 5 C10 10 8 18 18 18 C28 18 26 26 18 31" stroke="#10b981" stroke-width="2"
+                        stroke-linecap="round" fill="none" />
+                    <circle cx="18" cy="18" r="3" fill="#10b981" />
+                </svg>
+                <span>KINEXICA</span>
+            </a>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#why-us">Why Us</a></li>
+                <li><a href="#technology">Technology</a></li>
+                <li><a href="#economics">Economics</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#market">Market</a></li>
+                <li><a href="#contact" class="cta-btn">Get Demo</a></li>
+            </ul>
+            <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
 
-  <!-- ═══════════════════════ HERO ═══════════════════════ -->
-  <section id="hero">
-    <div class="hero-bg-grid" aria-hidden="true"></div>
-    <div class="hero-orb orb-1" aria-hidden="true"></div>
-    <div class="hero-orb orb-2" aria-hidden="true"></div>
-    <div class="hero-content">
-      <div class="hero-badge">
-        <span class="badge-dot"></span>
-        Physics-Informed Neural Network · Live Telemetry · Web3 Settlement
-      </div>
-      <h1>Autonomous AI<br /><span class="gradient-text">at the Food Spoilage Frontier</span></h1>
-      <p class="hero-sub">
-        Kinexica converts perishable decay curves into compounding revenue streams using
-        Arrhenius thermodynamics, edge computer vision, and an AI agent swarm — all verified
-        on-chain.
-      </p>
-      <div class="hero-stats" role="list">
-        <div class="stat-chip" role="listitem">
-          <span class="stat-num" id="counter-waste">$2.4T</span>
-          <span class="stat-label">Global Food Waste Market</span>
-        </div>
-        <div class="stat-chip" role="listitem">
-          <span class="stat-num">3σ</span>
-          <span class="stat-label">Prediction Confidence</span>
-        </div>
-        <div class="stat-chip" role="listitem">
-          <span class="stat-num">&lt;2s</span>
-          <span class="stat-label">Edge Inference Latency</span>
-        </div>
-      </div>
-      <div class="hero-actions">
-        <a href="#technology" class="btn-primary" id="explore-btn">Explore Technology</a>
-        <a href="#economics" class="btn-ghost">View Economic Case</a>
-      </div>
-    </div>
-    <div class="hero-visual" aria-hidden="true">
-      <div class="terminal-card">
-        <div class="terminal-bar">
-          <span class="t-dot red"></span>
-          <span class="t-dot yellow"></span>
-          <span class="t-dot green"></span>
-          <span class="t-title">spoilsense-edge v2.1</span>
-        </div>
-        <div class="terminal-body" id="terminal-body">
-          <div class="t-line"><span class="t-prompt">▶</span> <span class="t-cmd">INITIALIZE TELEMETRY</span></div>
-          <div class="t-line t-green">✔ Pallet-4B-Tomatoes connected</div>
-          <div class="t-line"><span class="t-key">Temp:</span> <span class="t-val" id="t-temp">15.3 °C</span></div>
-          <div class="t-line"><span class="t-key">Ethylene:</span> <span class="t-val" id="t-eth">1.19 ppm</span></div>
-          <div class="t-line t-green"><span class="t-key">Shelf Life:</span> <span class="t-val" id="t-shelf">318.2 hrs</span></div>
-          <div class="t-line"><span class="t-key">Status:</span> <span class="t-stable" id="t-status">STABLE</span></div>
-          <div class="t-line t-purple"><span class="t-key">PINN PIDR:</span> <span class="t-val" id="t-pidr">0.0047</span></div>
-          <div class="t-line t-dim">[AI BROKER] Routing optimal...<span class="cursor-blink">█</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════ WHY US ═══════════════════════ -->
-  <section id="why-us">
-    <div class="section-inner">
-      <div class="section-label">The Core Thesis</div>
-      <h2 class="section-title">Why Kinexica Wins</h2>
-      <p class="section-sub">
-        Traditional cold-chain models treat spoilage as an unavoidable cost. We treat decay as a
-        <strong>real-time signal</strong> and convert it into market action before value is lost.
-      </p>
-
-      <div class="comparison-grid">
-        <div class="compare-card card-red">
-          <div class="compare-header">
-            <span class="compare-icon">⛔</span>
-            <h3>Traditional Model</h3>
-          </div>
-          <ul>
-            <li>Loss compounds every year with no recovery mechanism</li>
-            <li>Spoiled food = zero value + disposal cost</li>
-            <li>No predictive capability — reactive-only protocols</li>
-            <li>Manual inspection misses early-stage pathogen spread</li>
-            <li>Heavy cumulative financial loss at Year 10</li>
-          </ul>
-        </div>
-        <div class="compare-vs" aria-hidden="true">VS</div>
-        <div class="compare-card card-green">
-          <div class="compare-header">
-            <span class="compare-icon">⚡</span>
-            <h3>Kinexica Model</h3>
-          </div>
-          <ul>
-            <li>Initial investment in Year 0 — break-even at Year 2–3</li>
-            <li>Every spoilage signal triggers autonomous liquidation at max value</li>
-            <li>PINN predicts decay 48–72 hrs ahead with physics-driven accuracy</li>
-            <li>CV-based lesion kinetics detect pathogens at sub-visual onset</li>
-            <li>Exponential revenue growth from Year 3 → 10</li>
-          </ul>
-        </div>
-      </div>
-
-      <blockquote class="hero-quote">
-        "Instead of watching losses grow every year, Kinexica converts decay into compounding revenue."
-      </blockquote>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════ CAPABILITY RADAR ═══════════════════════ -->
-  <section id="radar-section" class="section-dark">
-    <div class="section-inner">
-      <div class="section-label">Competitive Benchmark</div>
-      <h2 class="section-title">Capability Radar</h2>
-      <p class="section-sub">Kinexica outperforms across every critical dimension of food-chain intelligence.</p>
-      <div class="diagram-card full-width">
-        <img src="diagrams/capability_radar.png"
-             alt="Radar chart comparing Kinexica PINN+CV+Blockchain vs Traditional Cold-Chain vs IoT Sensors Only across six dimensions: shelf life prediction, pathogen detection, fraud detection, blockchain settlement, real-time alerts, carbon credits"
-             loading="lazy" />
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════ TECHNOLOGY ═══════════════════════ -->
-  <section id="technology">
-    <div class="section-inner">
-      <div class="section-label">Under the Hood</div>
-      <h2 class="section-title">Three-Tier Technology Stack</h2>
-      <div class="tech-grid">
-        <div class="tech-card" data-color="blue">
-          <div class="tech-icon">🔬</div>
-          <h3>B2B — SpoilSense Telemetry</h3>
-          <p>IoT edge sensors stream temperature, humidity, and ethylene ppm in real-time. The PINN Engine ingests these signals alongside Arrhenius rate constants to compute the Perishable Index Decay Rate (PIDR).</p>
-          <div class="tech-tags">
-            <span>FastAPI</span><span>SQLite</span><span>PINN</span><span>Uvicorn</span>
-          </div>
-        </div>
-        <div class="tech-card" data-color="purple">
-          <div class="tech-icon">👁️</div>
-          <h3>B2C — Edge Optical Lens</h3>
-          <p>Zero-hardware fallback using smartphone camera. OpenCV Laplacian diffusion analysis detects pathogenic growth (Botrytis, Penicillium), overripening, and calcium carbide adulteration fraud in under 2 seconds.</p>
-          <div class="tech-tags">
-            <span>OpenCV</span><span>Laplacian CV</span><span>Flet UI</span><span>Python</span>
-          </div>
-        </div>
-        <div class="tech-card" data-color="green">
-          <div class="tech-icon">🗺️</div>
-          <h3>B2G — Bio-Security Maps</h3>
-          <p>Geographic pathogen threat intelligence overlaid on real-time supply chain nodes. Botrytis and Penicillium outbreak detection feeds government food safety dashboards with PINN-derived shelf-life forecasts at district granularity.</p>
-          <div class="tech-tags">
-            <span>Geo-mapping</span><span>AI Broker</span><span>CrewAI</span><span>Web3</span>
-          </div>
-        </div>
-      </div>
-      <div class="diagram-card full-width" style="margin-top: 2.5rem;">
-        <img src="diagrams/architecture.png"
-             alt="Kinexica end-to-end system architecture: Sensors → PINN Engine → Predictions → AI Broker → Blockchain Settlement"
-             loading="lazy" />
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════ ARRHENIUS ═══════════════════════ -->
-  <section id="pinn-section" class="section-dark">
-    <div class="section-inner">
-      <div class="section-label">Physics-Informed Neural Network</div>
-      <h2 class="section-title">Arrhenius Decay Modelling</h2>
-      <p class="section-sub">
-        Unlike data-only approaches, our PINN bakes the Arrhenius thermodynamic law directly into its
-        loss function — ensuring predictions respect physical reality, not just statistical correlations.
-      </p>
-      <div class="diagram-card full-width">
-        <img src="diagrams/arrhenius_decay.png"
-             alt="Graph showing Arrhenius-driven shelf-life decay curves at 5°C, 15°C, 25°C and 35°C over 200 hours, with a 120-hour distress threshold line"
-             loading="lazy" />
-      </div>
-      <div class="formula-block">
-        <div class="formula-label">Arrhenius Rate Constant</div>
-        <div class="formula">k = A · e<sup>−Eₐ / RT</sup></div>
-        <div class="formula-desc">
-          Eₐ = 50,000 J/mol · A = 10⁸ · R = 8.314 J/mol·K · T = absolute temperature (K)
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════ ECONOMICS ═══════════════════════ -->
-  <section id="economics">
-    <div class="section-inner">
-      <div class="section-label">Financial Modelling</div>
-      <h2 class="section-title">10-Year Economic Analysis</h2>
-      <p class="section-sub">Our model converts Year-0 capital investment into strong cumulative profit by Year 3–4, while traditional models continue to bleed losses indefinitely.</p>
-      <div class="diagram-card full-width">
-        <img src="diagrams/economic_analysis.png"
-             alt="Bar chart comparing 10-year cumulative financial impact — Traditional model (blue bars, increasing losses) vs Kinexica model (orange bars, exponential profit growth after break-even at Year 3)"
-             loading="lazy" />
-      </div>
-      <div class="econ-highlights">
-        <div class="econ-stat">
-          <span class="econ-num" style="color: var(--green);">$535K</span>
-          <span class="econ-label">Kinexica cumulative profit @ Year 10</span>
-        </div>
-        <div class="econ-stat">
-          <span class="econ-num" style="color: var(--blue);">−$220K</span>
-          <span class="econ-label">Traditional model cumulative loss @ Year 10</span>
-        </div>
-        <div class="econ-stat">
-          <span class="econ-num" style="color: var(--amber);">Year 3</span>
-          <span class="econ-label">Break-even milestone for Kinexica</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════ MARKET ═══════════════════════ -->
-  <section id="market" class="section-dark">
-    <div class="section-inner">
-      <div class="section-label">Total Addressable Market</div>
-      <h2 class="section-title">$2.4 Trillion Opportunity</h2>
-      <p class="section-sub">Kinexica targets five distinct verticals across B2B, B2C, and B2G segments.</p>
-      <div class="market-layout">
-        <div class="diagram-card">
-          <img src="diagrams/market_opportunity.png"
-               alt="Donut chart showing market opportunity breakdown: B2B Agri-Supply 40%, B2C Consumers 22%, B2G Government 18%, Aquaculture 12%, Carbon Credits 8%"
-               loading="lazy" />
-        </div>
-        <div class="market-list">
-          <div class="market-item">
-            <span class="m-dot" style="background: var(--green);"></span>
-            <div>
-              <strong>Warehouses &amp; Cold Storage Chains</strong>
-              <p>Real-time pallet-level monitoring with autonomous negotiation agents for distressed asset liquidation at maximum value recovery.</p>
+    <!-- HERO -->
+    <section id="hero">
+        <div class="hero-bg-grid" aria-hidden="true"></div>
+        <div class="hero-orb orb-1" aria-hidden="true"></div>
+        <div class="hero-orb orb-2" aria-hidden="true"></div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                Physics-Informed Neural Network · Live Telemetry · Web3 Settlement
             </div>
-          </div>
-          <div class="market-item">
-            <span class="m-dot" style="background: var(--blue);"></span>
-            <div>
-              <strong>Agri-Supply Chain Enterprises</strong>
-              <p>End-to-end spoilage prevention from farm gate to retailer shelf using PINN-driven shelf-life passports.</p>
+            <h1>Autonomous AI<br /><span class="gradient-text">at the Food Spoilage Frontier</span></h1>
+            <p class="hero-sub">
+                Kinexica converts perishable decay curves into compounding revenue streams using
+                Arrhenius thermodynamics, edge computer vision, and an AI agent swarm — all verified on-chain.
+            </p>
+            <div class="hero-stats" role="list">
+                <div class="stat-chip" role="listitem">
+                    <span class="stat-num">$2.4T</span>
+                    <span class="stat-label">Global Food Waste Market</span>
+                </div>
+                <div class="stat-chip" role="listitem">
+                    <span class="stat-num">3σ</span>
+                    <span class="stat-label">Prediction Confidence</span>
+                </div>
+                <div class="stat-chip" role="listitem">
+                    <span class="stat-num">&lt;2s</span>
+                    <span class="stat-label">Edge Inference Latency</span>
+                </div>
             </div>
-          </div>
-          <div class="market-item">
-            <span class="m-dot" style="background: var(--purple);"></span>
-            <div>
-              <strong>Government Food Corporations</strong>
-              <p>Bio-security intelligence dashboards with pathogen outbreak detection at district level for regulatory compliance.</p>
+            <div class="hero-actions">
+                <a href="#technology" class="btn-primary" id="explore-btn">Explore Technology</a>
+                <a href="#pricing" class="btn-ghost">View Pricing</a>
             </div>
-          </div>
-          <div class="market-item">
-            <span class="m-dot" style="background: var(--amber);"></span>
-            <div>
-              <strong>Aquaculture &amp; Bio-Feed Industries</strong>
-              <p>Universal Crop Matrix extended to aquatic perishables, seafood, and high-value protein commodities.</p>
-            </div>
-          </div>
-          <div class="market-item">
-            <span class="m-dot" style="background: #06b6d4;"></span>
-            <div>
-              <strong>Carbon Credit Marketplaces</strong>
-              <p>Every kilogram of food waste prevented generates verifiable blockchain-stamped carbon credits tradeable on open markets.</p>
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </section>
+        <div class="hero-visual" aria-hidden="true">
+            <div class="terminal-card">
+                <div class="terminal-bar">
+                    <span class="t-dot t-red"></span>
+                    <span class="t-dot t-yellow"></span>
+                    <span class="t-dot t-green-dot"></span>
+                    <span class="t-title">spoilsense-edge v2.1</span>
+                </div>
+                <div class="terminal-body" id="terminal-body">
+                    <div class="t-line"><span class="t-prompt">▶</span> <span class="t-cmd">INITIALIZE TELEMETRY</span>
+                    </div>
+                    <div class="t-line t-green">✔ Pallet-4B-Tomatoes connected</div>
+                    <div class="t-line"><span class="t-key">Temp:</span> <span class="t-val" id="t-temp">15.3 °C</span>
+                    </div>
+                    <div class="t-line"><span class="t-key">Ethylene:</span> <span class="t-val" id="t-eth">1.19
+                            ppm</span></div>
+                    <div class="t-line t-green"><span class="t-key">Shelf Life:</span> <span class="t-val"
+                            id="t-shelf">188.2 hrs</span></div>
+                    <div class="t-line"><span class="t-key">Status:</span> <span class="t-stable"
+                            id="t-status">STABLE</span></div>
+                    <div class="t-line t-purple"><span class="t-key">PINN PIDR:</span> <span class="t-val"
+                            id="t-pidr">0.0047</span></div>
+                    <div class="t-line t-dim">[AI BROKER] Routing optimal...<span class="cursor-blink">█</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <!-- ═══════════════════════ CONTACT ═══════════════════════ -->
-  <section id="contact">
-    <div class="section-inner center">
-      <div class="section-label">Get Involved</div>
-      <h2 class="section-title">Ready to Stop the Rot?</h2>
-      <p class="section-sub">Partner with Kinexica to deploy autonomous spoilage prevention in your supply chain.</p>
-      <form class="contact-form" id="contact-form" novalidate>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" placeholder="Your full name" required autocomplete="name" />
-          </div>
-          <div class="form-group">
-            <label for="org">Organisation</label>
-            <input type="text" id="org" name="org" placeholder="Company / Institution" autocomplete="organization" />
-          </div>
+    <!-- WHY US -->
+    <section id="why-us">
+        <div class="section-inner">
+            <div class="section-label">The Core Thesis</div>
+            <h2 class="section-title">Why Kinexica Wins</h2>
+            <p class="section-sub">Traditional cold-chain models treat spoilage as an unavoidable cost. We treat decay
+                as a <strong>real-time signal</strong> and convert it into market action before value is lost.</p>
+            <div class="comparison-grid">
+                <div class="compare-card card-red reveal">
+                    <div class="compare-header">
+                        <span class="compare-icon">⛔</span>
+                        <h3 class="text-red">Traditional Model</h3>
+                    </div>
+                    <ul>
+                        <li>Loss compounds every year with no recovery mechanism</li>
+                        <li>Spoiled food = zero value + disposal cost</li>
+                        <li>No predictive capability — reactive-only protocols</li>
+                        <li>Manual inspection misses early-stage pathogen spread</li>
+                        <li>Heavy cumulative financial loss at Year 10</li>
+                    </ul>
+                </div>
+                <div class="compare-vs" aria-hidden="true">VS</div>
+                <div class="compare-card card-green reveal">
+                    <div class="compare-header">
+                        <span class="compare-icon">⚡</span>
+                        <h3 class="text-green">Kinexica Model</h3>
+                    </div>
+                    <ul>
+                        <li>Initial investment in Year 0 — break-even at Year 2–3</li>
+                        <li>Every spoilage signal triggers autonomous liquidation at max value</li>
+                        <li>PINN predicts decay 48–72 hrs ahead with physics-driven accuracy</li>
+                        <li>CV-based lesion kinetics detect pathogens at sub-visual onset</li>
+                        <li>Exponential revenue growth from Year 3 → 10</li>
+                    </ul>
+                </div>
+            </div>
+            <blockquote class="hero-quote">"Instead of watching losses grow every year, Kinexica converts decay into
+                compounding revenue."</blockquote>
         </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" placeholder="you@company.com" required autocomplete="email" />
-        </div>
-        <div class="form-group">
-          <label for="message">Message</label>
-          <textarea id="message" name="message" rows="4" placeholder="Tell us about your use case..."></textarea>
-        </div>
-        <button type="submit" class="btn-primary" id="submit-btn">Request Demo Access</button>
-        <div class="form-success" id="form-success" role="alert" aria-live="polite" style="display:none;">
-          ✔ Thank you! We will be in touch within 24 hours.
-        </div>
-      </form>
-    </div>
-  </section>
+    </section>
 
-  <!-- ═══════════════════════ FOOTER ═══════════════════════ -->
-  <footer>
-    <div class="footer-inner">
-      <div class="footer-logo">
-        <svg width="24" height="24" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-          <circle cx="18" cy="18" r="17" stroke="#10b981" stroke-width="1.5"/>
-          <path d="M18 5 C10 10 8 18 18 18 C28 18 26 26 18 31" stroke="#10b981" stroke-width="2" stroke-linecap="round" fill="none"/>
-          <circle cx="18" cy="18" r="3" fill="#10b981"/>
-        </svg>
-        <span>KINEXICA</span>
-      </div>
-      <p class="footer-tagline">Autonomous AI at the Food Spoilage Frontier</p>
-      <p class="footer-copy">© 2025 Kinexica. Built with PINN · OpenCV · CrewAI · Web3 · Flet</p>
-    </div>
-  </footer>
+    <!-- CAPABILITY RADAR -->
+    <section id="radar-section" class="section-dark">
+        <div class="section-inner">
+            <div class="section-label">Competitive Benchmark</div>
+            <h2 class="section-title">Capability Radar</h2>
+            <p class="section-sub">Kinexica outperforms across every critical dimension of food-chain intelligence.</p>
+            <div class="diagram-card full-width reveal">
+                <img src="diagrams/capability_radar.png"
+                    alt="Radar chart comparing Kinexica vs Traditional Cold-Chain vs IoT Sensors across six capability dimensions"
+                    loading="lazy" />
+            </div>
+        </div>
+    </section>
 
-  <script src="script.js"></script>
+    <!-- TECHNOLOGY -->
+    <section id="technology">
+        <div class="section-inner">
+            <div class="section-label">Under the Hood</div>
+            <h2 class="section-title">Three-Tier Technology Stack</h2>
+            <div class="tech-grid">
+                <div class="tech-card tech-blue reveal">
+                    <div class="tech-icon">🔬</div>
+                    <h3>B2B — SpoilSense Telemetry</h3>
+                    <p>IoT edge sensors stream temperature, humidity, and ethylene ppm in real-time. The PINN Engine
+                        ingests these signals alongside Arrhenius rate constants to compute the PIDR.</p>
+                    <div class="tech-tags"><span>FastAPI</span><span>SQLite</span><span>PINN</span><span>Uvicorn</span>
+                    </div>
+                </div>
+                <div class="tech-card tech-purple reveal">
+                    <div class="tech-icon">👁️</div>
+                    <h3>B2C — Edge Optical Lens</h3>
+                    <p>Zero-hardware fallback using smartphone camera. OpenCV Laplacian diffusion detects Botrytis,
+                        Penicillium, overripening, and calcium carbide adulteration fraud in under 2 seconds.</p>
+                    <div class="tech-tags"><span>OpenCV</span><span>Laplacian CV</span><span>Flet
+                            UI</span><span>Python</span></div>
+                </div>
+                <div class="tech-card tech-green reveal">
+                    <div class="tech-icon">🗺️</div>
+                    <h3>B2G — Bio-Security Maps</h3>
+                    <p>Geographic pathogen threat intelligence overlaid on supply chain nodes. PINN-derived shelf-life
+                        forecasts feed government food safety dashboards at district granularity.</p>
+                    <div class="tech-tags"><span>Geo-mapping</span><span>AI
+                            Broker</span><span>CrewAI</span><span>Web3</span></div>
+                </div>
+            </div>
+            <div class="diagram-card full-width mt-diagram reveal">
+                <img src="diagrams/architecture.png" alt="Kinexica end-to-end system architecture pipeline"
+                    loading="lazy" />
+            </div>
+        </div>
+    </section>
+
+    <!-- ARRHENIUS -->
+    <section id="pinn-section" class="section-dark">
+        <div class="section-inner">
+            <div class="section-label">Physics-Informed Neural Network</div>
+            <h2 class="section-title">Arrhenius Decay Modelling</h2>
+            <p class="section-sub">Unlike data-only approaches, our PINN bakes the Arrhenius thermodynamic law directly
+                into its loss function — ensuring predictions respect physical reality, not just statistical
+                correlations.</p>
+            <div class="diagram-card full-width reveal">
+                <img src="diagrams/arrhenius_decay.png"
+                    alt="Arrhenius shelf-life decay curves at 5°C, 15°C, 25°C, 35°C with 120hr distress threshold"
+                    loading="lazy" />
+            </div>
+            <div class="formula-block reveal">
+                <div class="formula-label">Arrhenius Rate Constant</div>
+                <div class="formula">k = A · e<sup>−Eₐ / RT</sup></div>
+                <div class="formula-desc">Eₐ = 50,000 J/mol · A = 10⁸ · R = 8.314 J/mol·K · T = absolute temperature (K)
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ECONOMICS -->
+    <section id="economics">
+        <div class="section-inner">
+            <div class="section-label">Financial Modelling</div>
+            <h2 class="section-title">10-Year Economic Analysis</h2>
+            <p class="section-sub">Our model converts Year-0 capital investment into strong cumulative profit by Year
+                3–4, while traditional models continue to bleed losses indefinitely.</p>
+            <div class="diagram-card full-width reveal">
+                <img src="diagrams/economic_analysis.png"
+                    alt="10-year comparative financial impact bar chart: Traditional (increasing losses) vs Kinexica (exponential profit after break-even)"
+                    loading="lazy" />
+            </div>
+            <div class="econ-highlights">
+                <div class="econ-stat reveal">
+                    <span class="econ-num text-green">$535K</span>
+                    <span class="econ-label">Kinexica cumulative profit @ Year 10</span>
+                </div>
+                <div class="econ-stat reveal">
+                    <span class="econ-num text-blue">−$220K</span>
+                    <span class="econ-label">Traditional model cumulative loss @ Year 10</span>
+                </div>
+                <div class="econ-stat reveal">
+                    <span class="econ-num text-amber">Year 3</span>
+                    <span class="econ-label">Break-even milestone for Kinexica</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="pricing" class="section-dark">
+        <div class="section-inner">
+            <div class="section-label">Transparent Pricing</div>
+            <h2 class="section-title">Choose Your Plan</h2>
+            <p class="section-sub">Flexible pricing for every supply chain scale. Toggle between USD and INR.</p>
+
+            <!-- Currency toggle -->
+            <div class="currency-toggle" role="group" aria-label="Currency selector">
+                <button class="curr-btn active" id="btn-usd" data-currency="usd" aria-pressed="true">$ USD</button>
+                <div class="curr-divider" aria-hidden="true"></div>
+                <button class="curr-btn" id="btn-inr" data-currency="inr" aria-pressed="false">₹ INR</button>
+            </div>
+
+            <!-- Billing toggle -->
+            <div class="billing-toggle">
+                <span class="billing-label">Monthly</span>
+                <label class="switch" for="billing-switch" aria-label="Toggle annual billing">
+                    <input type="checkbox" id="billing-switch" />
+                    <span class="slider"></span>
+                </label>
+                <span class="billing-label">Annual <span class="save-badge">Save 20%</span></span>
+            </div>
+
+            <!-- Pricing cards -->
+            <div class="pricing-grid">
+
+                <!-- Starter -->
+                <div class="pricing-card reveal" data-tier="starter">
+                    <div class="pricing-tier">Starter B2B</div>
+                    <div class="pricing-price">
+                        <span class="price-symbol" id="sym-starter">$</span><span class="price-amount"
+                            id="price-starter">199</span><span class="price-period">/mo</span>
+                    </div>
+                    <div class="price-annual-note hidden" id="annual-starter">Billed as <strong
+                            id="annual-starter-total">$2,390</strong>/yr</div>
+                    <p class="pricing-desc">Perfect for small warehouses and agri-startups getting started with
+                        PINN-driven telemetry.</p>
+                    <ul class="pricing-features">
+                        <li><span class="feat-check">✔</span> Up to 5 pallets monitored</li>
+                        <li><span class="feat-check">✔</span> Real-time temperature &amp; ethylene telemetry</li>
+                        <li><span class="feat-check">✔</span> PINN shelf-life predictions</li>
+                        <li><span class="feat-check">✔</span> Email alerts on distress events</li>
+                        <li><span class="feat-cross">✗</span> CV Optical Lens (LENS module)</li>
+                        <li><span class="feat-cross">✗</span> B2G Bio-Security Maps</li>
+                        <li><span class="feat-cross">✗</span> Blockchain settlement</li>
+                    </ul>
+                    <a href="#contact" class="btn-ghost pricing-cta">Get Started</a>
+                </div>
+
+                <!-- Professional (highlighted) -->
+                <div class="pricing-card pricing-popular reveal" data-tier="pro">
+                    <div class="popular-badge">Most Popular</div>
+                    <div class="pricing-tier">Professional</div>
+                    <div class="pricing-price">
+                        <span class="price-symbol" id="sym-pro">$</span><span class="price-amount"
+                            id="price-pro">599</span><span class="price-period">/mo</span>
+                    </div>
+                    <div class="price-annual-note hidden" id="annual-pro">Billed as <strong
+                            id="annual-pro-total">$7,190</strong>/yr</div>
+                    <p class="pricing-desc">Full-stack spoilage prevention for growing cold-chain enterprises with
+                        multi-module access.</p>
+                    <ul class="pricing-features">
+                        <li><span class="feat-check">✔</span> Up to 50 pallets monitored</li>
+                        <li><span class="feat-check">✔</span> Real-time multi-sensor telemetry</li>
+                        <li><span class="feat-check">✔</span> PINN + CV Optical Lens (LENS)</li>
+                        <li><span class="feat-check">✔</span> AI Broker auto-liquidation</li>
+                        <li><span class="feat-check">✔</span> SMS + Email + Dashboard alerts</li>
+                        <li><span class="feat-check">✔</span> B2G Bio-Security Maps</li>
+                        <li><span class="feat-cross">✗</span> Blockchain settlement (add-on)</li>
+                    </ul>
+                    <a href="#contact" class="btn-primary pricing-cta">Start Free Trial</a>
+                </div>
+
+                <!-- Enterprise -->
+                <div class="pricing-card reveal" data-tier="enterprise">
+                    <div class="pricing-tier">Enterprise B2G</div>
+                    <div class="pricing-price">
+                        <span class="price-symbol" id="sym-ent">$</span><span class="price-amount"
+                            id="price-ent">Custom</span>
+                    </div>
+                    <div class="price-annual-note" id="annual-ent">&nbsp;</div>
+                    <p class="pricing-desc">Government food corporations, large warehouses, aquaculture industries.
+                        Full-platform deployment with SLA.</p>
+                    <ul class="pricing-features">
+                        <li><span class="feat-check">✔</span> Unlimited pallet monitoring</li>
+                        <li><span class="feat-check">✔</span> Full PINN + CV + B2G stack</li>
+                        <li><span class="feat-check">✔</span> Web3 blockchain settlement</li>
+                        <li><span class="feat-check">✔</span> SynthiID watermark verification</li>
+                        <li><span class="feat-check">✔</span> Carbon credit tracking</li>
+                        <li><span class="feat-check">✔</span> Dedicated on-site support</li>
+                        <li><span class="feat-check">✔</span> Custom SLA + uptime guarantee</li>
+                    </ul>
+                    <a href="#contact" class="btn-ghost pricing-cta">Contact Sales</a>
+                </div>
+
+            </div>
+
+            <!-- Live INR rate note -->
+            <p class="rate-note hidden" id="rate-note">
+                <span id="rate-value">1 USD = ₹84.50</span> · Rate fetched live from exchangerate-api.com
+            </p>
+        </div>
+    </section>
+
+    <!-- MARKET -->
+    <section id="market">
+        <div class="section-inner">
+            <div class="section-label">Total Addressable Market</div>
+            <h2 class="section-title">$2.4 Trillion Opportunity</h2>
+            <p class="section-sub">Kinexica targets five distinct verticals across B2B, B2C, and B2G segments.</p>
+            <div class="market-layout">
+                <div class="diagram-card reveal">
+                    <img src="diagrams/market_opportunity.png"
+                        alt="Donut chart: B2B 40%, B2C 22%, B2G 18%, Aquaculture 12%, Carbon Credits 8%"
+                        loading="lazy" />
+                </div>
+                <div class="market-list">
+                    <div class="market-item reveal">
+                        <span class="m-dot m-green"></span>
+                        <div><strong>Warehouses &amp; Cold Storage Chains</strong>
+                            <p>Pallet-level monitoring with autonomous negotiation for distressed asset liquidation at
+                                maximum value recovery.</p>
+                        </div>
+                    </div>
+                    <div class="market-item reveal">
+                        <span class="m-dot m-blue"></span>
+                        <div><strong>Agri-Supply Chain Enterprises</strong>
+                            <p>End-to-end spoilage prevention from farm gate to retailer shelf using PINN-driven
+                                shelf-life passports.</p>
+                        </div>
+                    </div>
+                    <div class="market-item reveal">
+                        <span class="m-dot m-purple"></span>
+                        <div><strong>Government Food Corporations</strong>
+                            <p>Bio-security intelligence dashboards with pathogen outbreak detection at district level
+                                for regulatory compliance.</p>
+                        </div>
+                    </div>
+                    <div class="market-item reveal">
+                        <span class="m-dot m-amber"></span>
+                        <div><strong>Aquaculture &amp; Bio-Feed Industries</strong>
+                            <p>Universal Crop Matrix extended to aquatic perishables, seafood, and high-value protein
+                                commodities.</p>
+                        </div>
+                    </div>
+                    <div class="market-item reveal">
+                        <span class="m-dot m-cyan"></span>
+                        <div><strong>Carbon Credit Marketplaces</strong>
+                            <p>Every kilogram of food waste prevented generates verifiable blockchain-stamped carbon
+                                credits tradeable on open markets.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section-dark">
+        <div class="section-inner section-center">
+            <div class="section-label">Get Involved</div>
+            <h2 class="section-title">Ready to Stop the Rot?</h2>
+            <p class="section-sub">Partner with Kinexica to deploy autonomous spoilage prevention in your supply chain.
+            </p>
+            <form class="contact-form" id="contact-form" novalidate>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" placeholder="Your full name" required
+                            autocomplete="name" />
+                    </div>
+                    <div class="form-group">
+                        <label for="org">Organisation</label>
+                        <input type="text" id="org" name="org" placeholder="Company / Institution"
+                            autocomplete="organization" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="you@company.com" required
+                        autocomplete="email" />
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" rows="4"
+                        placeholder="Tell us about your use case..."></textarea>
+                </div>
+                <button type="submit" class="btn-primary" id="submit-btn">Request Demo Access</button>
+                <div class="form-success hidden" id="form-success" role="alert" aria-live="polite">
+                    ✔ Thank you! We will be in touch within 24 hours.
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-logo">
+                <svg width="24" height="24" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+                    <circle cx="18" cy="18" r="17" stroke="#10b981" stroke-width="1.5" />
+                    <path d="M18 5 C10 10 8 18 18 18 C28 18 26 26 18 31" stroke="#10b981" stroke-width="2"
+                        stroke-linecap="round" fill="none" />
+                    <circle cx="18" cy="18" r="3" fill="#10b981" />
+                </svg>
+                <span>KINEXICA</span>
+            </div>
+            <p class="footer-tagline">Autonomous AI at the Food Spoilage Frontier</p>
+            <p class="footer-copy">© 2025 Kinexica · Built with PINN · OpenCV · CrewAI · Web3 · Flet</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
+
 </html>

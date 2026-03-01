@@ -4,15 +4,14 @@ Produces all 4 data-driven diagrams as PNG files for the website.
 Run: python website/generate_diagrams.py
 """
 # pylint: disable=invalid-name
+import numpy as np
+import matplotlib.ticker as mticker
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 import os
-import textwrap
 
 import matplotlib
-matplotlib.use("Agg")
-import matplotlib.patches as mpatches  # noqa: E402
-import matplotlib.pyplot as plt         # noqa: E402
-import matplotlib.ticker as mticker     # noqa: E402
-import numpy as np                      # noqa: E402
+matplotlib.use("Agg")  # must be called before importing pyplot
 
 OUT = os.path.join(os.path.dirname(
     os.path.abspath(__file__)), "public", "diagrams")
@@ -64,16 +63,24 @@ def diagram_economic():
                        alpha=0.90, zorder=3, label="Kinexica Model")
 
     # Value labels on top/bottom of each bar
-    for bar in bars_trad:
-        h = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width()/2, h - (8 if h < 0 else 8),
-                f"${int(h)}k", ha="center", va="top" if h < 0 else "bottom",
-                fontsize=7.5, color=BLUE, alpha=0.9)
-    for bar in bars_kinx:
-        h = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width()/2, h + (5 if h >= 0 else -5),
-                f"${int(h)}k", ha="center", va="bottom" if h >= 0 else "top",
-                fontsize=7.5, color=AMBER, alpha=0.9)
+    for trad_rect in bars_trad:
+        h = trad_rect.get_height()
+        ax.text(
+            trad_rect.get_x() + trad_rect.get_width() / 2,
+            h - (8 if h < 0 else 8),
+            f"${int(h)}k",
+            ha="center", va="top" if h < 0 else "bottom",
+            fontsize=7.5, color=BLUE, alpha=0.9,
+        )
+    for kinx_rect in bars_kinx:
+        h = kinx_rect.get_height()
+        ax.text(
+            kinx_rect.get_x() + kinx_rect.get_width() / 2,
+            h + (5 if h >= 0 else -5),
+            f"${int(h)}k",
+            ha="center", va="bottom" if h >= 0 else "top",
+            fontsize=7.5, color=AMBER, alpha=0.9,
+        )
 
     ax.axhline(0, color=GREY, linewidth=0.8, linestyle="--", zorder=2)
     ax.set_xlabel("Year",  fontsize=13, labelpad=10, color=WHITE)
@@ -231,12 +238,12 @@ def diagram_market():
     fig.patch.set_facecolor(BG)
     ax.set_facecolor(BG)
 
-    wedges, texts, autotexts = ax.pie(
+    _wedges, _texts, autotexts = ax.pie(
         sizes, labels=labels, colors=colors, explode=explode,
         autopct="%1.0f%%", startangle=140,
         pctdistance=0.72, labeldistance=1.12,
         wedgeprops=dict(linewidth=1.8, edgecolor=BG),
-        textprops=dict(color=WHITE, fontsize=11)
+        textprops=dict(color=WHITE, fontsize=11),
     )
     for at in autotexts:
         at.set_fontsize(11)
@@ -301,8 +308,11 @@ def diagram_architecture():
     ax.set_ylim(0, 1)
     ax.set_title("Kinexica System Architecture — End-to-End Pipeline",
                  fontsize=15, fontweight="bold", color=WHITE, pad=14)
-    ax.text(0.5, 0.06, "Physics-Informed Neural Network (PINN)  ·  Computer Vision  ·  AI Agent Swarm  ·  Web3 Smart Contracts",
-            ha="center", fontsize=9.5, color=GREY)
+    footer_txt = (
+        "Physics-Informed Neural Network (PINN)  ·  Computer Vision"
+        "  ·  AI Agent Swarm  ·  Web3 Smart Contracts"
+    )
+    ax.text(0.5, 0.06, footer_txt, ha="center", fontsize=9.5, color=GREY)
 
     fig.tight_layout(pad=1.2)
     path = os.path.join(OUT, "architecture.png")
