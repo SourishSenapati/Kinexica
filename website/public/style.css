@@ -596,10 +596,31 @@ section {
 .diagram-card:hover {
   box-shadow: var(--shadow);
 }
-.diagram-card img {
+.diagram-card img,
+.diagram-card canvas {
   width: 100%;
   height: auto;
   display: block;
+}
+.diagram-dynamic {
+  padding: 2rem;
+}
+.diagram-radar-wrapper {
+  width: 100%;
+  max-width: 700px;
+  aspect-ratio: 2;
+  margin: 0 auto;
+}
+.diagram-flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.canvas-max-400 {
+  max-height: 400px;
+}
+.canvas-max-350 {
+  max-height: 350px;
 }
 .full-width {
   width: 100%;

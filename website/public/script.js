@@ -249,3 +249,159 @@ const sectionObserver = new IntersectionObserver(
   { threshold: 0.4 }
 );
 sections.forEach((s) => sectionObserver.observe(s));
+
+// ── Dynamic Canvas Charts (Chart.js) ─────────────────────────
+if (typeof Chart !== 'undefined') {
+  Chart.defaults.color = '#a3a3a3';
+  Chart.defaults.font.family = '"Inter", sans-serif';
+
+  // 1. Radar Chart
+  const radarCtx = document.getElementById('capabilityRadarChart');
+  if (radarCtx) {
+    new Chart(radarCtx, {
+      type: 'radar',
+      data: {
+        labels: ['Predictive AI', 'Detection Speed', 'Hardware Cost', 'Classification', 'Integration', 'Scalability'],
+        datasets: [
+          {
+            label: 'Kinexica',
+            data: [95, 100, 90, 85, 90, 95],
+            backgroundColor: 'rgba(16, 185, 129, 0.2)',
+            borderColor: '#10b981',
+            pointBackgroundColor: '#10b981'
+          },
+          {
+            label: 'Basic IoT Sensors',
+            data: [30, 80, 50, 20, 60, 70],
+            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+            borderColor: '#3b82f6',
+            pointBackgroundColor: '#3b82f6'
+          },
+          {
+            label: 'Traditional Cold-Chain',
+            data: [10, 20, 80, 10, 30, 40],
+            backgroundColor: 'rgba(239, 68, 68, 0.2)',
+            borderColor: '#ef4444',
+            pointBackgroundColor: '#ef4444'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          r: {
+            angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
+            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+            pointLabels: { color: '#a3a3a3', font: { size: 10 } },
+            ticks: { display: false, max: 100, min: 0 }
+          }
+        },
+        plugins: {
+          legend: { position: 'bottom', labels: { color: '#ffffff' } }
+        }
+      }
+    });
+  }
+
+  // 2. Arrhenius Decay Line Chart
+  const decayCtx = document.getElementById('arrheniusDecayChart');
+  if (decayCtx) {
+    const timeLabels = Array.from({length: 15}, (_, i) => `${i * 12}h`);
+    // Simulated realistic curve drops
+    const temp5 = timeLabels.map((_, i) => Math.max(0, 100 - (Math.pow(1.08, i) * 2)));
+    const temp15 = timeLabels.map((_, i) => Math.max(0, 100 - (Math.pow(1.18, i) * 3)));
+    const temp25 = timeLabels.map((_, i) => Math.max(0, 100 - (Math.pow(1.35, i) * 4)));
+    const temp35 = timeLabels.map((_, i) => Math.max(0, 100 - (Math.pow(1.6, i) * 5)));
+    
+    new Chart(decayCtx, {
+      type: 'line',
+      data: {
+        labels: timeLabels,
+        datasets: [
+          { label: '5°C (Stable)', data: temp5, borderColor: '#3b82f6', tension: 0.4 },
+          { label: '15°C', data: temp15, borderColor: '#10b981', tension: 0.4 },
+          { label: '25°C', data: temp25, borderColor: '#f59e0b', tension: 0.4 },
+          { label: '35°C (Critical)', data: temp35, borderColor: '#ef4444', tension: 0.4 }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: { 
+            title: { display: true, text: 'Quality Index (%)', color: '#a3a3a3' },
+            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+            min: 0, max: 100
+          },
+          x: { grid: { color: 'rgba(255, 255, 255, 0.05)' } }
+        },
+        plugins: {
+          legend: { labels: { color: '#ffffff' } }
+        }
+      }
+    });
+  }
+
+  // 3. Economic Analysis Bar Chart
+  const econCtx = document.getElementById('economicChart');
+  if (econCtx) {
+    new Chart(econCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5', 'Year 6', 'Year 7', 'Year 8', 'Year 9', 'Year 10'],
+        datasets: [
+          {
+            label: 'Kinexica Profit Projection',
+            data: [-50, -20, 15, 60, 120, 190, 260, 340, 430, 535],
+            backgroundColor: '#10b981'
+          },
+          {
+            label: 'Traditional Cumulative Loss',
+            data: [-20, -42, -65, -88, -112, -135, -158, -181, -202, -220],
+            backgroundColor: '#ef4444'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: { 
+            title: { display: true, text: 'Financial Impact (USD Thousands)', color: '#a3a3a3' },
+            grid: { color: 'rgba(255, 255, 255, 0.05)' } 
+          },
+          x: { grid: { display: false } }
+        },
+        plugins: {
+          legend: { labels: { color: '#ffffff' } }
+        }
+      }
+    });
+  }
+
+  // 4. Market Doughnut Chart
+  const marketCtx = document.getElementById('marketChart');
+  if (marketCtx) {
+    new Chart(marketCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['B2B Warehouses (%)', 'B2C Retail (%)', 'B2G Govt (%)', 'Aquaculture (%)', 'Carbon Markets (%)'],
+        datasets: [{
+          data: [40, 22, 18, 12, 8],
+          backgroundColor: ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#06b6d4'],
+          borderWidth: 0,
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '70%',
+        plugins: {
+          legend: { position: 'right', labels: { color: '#ffffff', font: { size: 12 } } }
+        }
+      }
+    });
+  }
+}

@@ -117,7 +117,12 @@
             <div class="comparison-grid">
                 <div class="compare-card card-red reveal">
                     <div class="compare-header">
-                        <span class="compare-icon">⛔</span>
+                        <svg class="compare-icon" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                            <line x1="9" y1="9" x2="15" y2="15"></line>
+                        </svg>
                         <h3 class="text-red">Traditional Model</h3>
                     </div>
                     <ul>
@@ -131,7 +136,10 @@
                 <div class="compare-vs" aria-hidden="true">VS</div>
                 <div class="compare-card card-green reveal">
                     <div class="compare-header">
-                        <span class="compare-icon">⚡</span>
+                        <svg class="compare-icon" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                        </svg>
                         <h3 class="text-green">Kinexica Model</h3>
                     </div>
                     <ul>
@@ -154,10 +162,10 @@
             <div class="section-label">Competitive Benchmark</div>
             <h2 class="section-title">Capability Radar</h2>
             <p class="section-sub">Kinexica outperforms across every critical dimension of food-chain intelligence.</p>
-            <div class="diagram-card full-width reveal">
-                <img src="diagrams/capability_radar.png"
-                    alt="Radar chart comparing Kinexica vs Traditional Cold-Chain vs IoT Sensors across six capability dimensions"
-                    loading="lazy" />
+            <div class="diagram-card full-width reveal diagram-dynamic diagram-flex-center">
+                <div class="diagram-radar-wrapper">
+                    <canvas id="capabilityRadarChart"></canvas>
+                </div>
             </div>
         </div>
     </section>
@@ -169,7 +177,15 @@
             <h2 class="section-title">Three-Tier Technology Stack</h2>
             <div class="tech-grid">
                 <div class="tech-card tech-blue reveal">
-                    <div class="tech-icon">🔬</div>
+                    <div class="tech-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="12" y1="18" x2="12" y2="12"></line>
+                            <line x1="9" y1="15" x2="15" y2="15"></line>
+                        </svg>
+                    </div>
                     <h3>B2B — SpoilSense Telemetry</h3>
                     <p>IoT edge sensors stream temperature, humidity, and ethylene ppm in real-time. The PINN Engine
                         ingests these signals alongside Arrhenius rate constants to compute the PIDR.</p>
@@ -177,7 +193,13 @@
                     </div>
                 </div>
                 <div class="tech-card tech-purple reveal">
-                    <div class="tech-icon">👁️</div>
+                    <div class="tech-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </div>
                     <h3>B2C — Edge Optical Lens</h3>
                     <p>Zero-hardware fallback using smartphone camera. OpenCV Laplacian diffusion detects Botrytis,
                         Penicillium, overripening, and calcium carbide adulteration fraud in under 2 seconds.</p>
@@ -185,7 +207,14 @@
                             UI</span><span>Python</span></div>
                 </div>
                 <div class="tech-card tech-green reveal">
-                    <div class="tech-icon">🗺️</div>
+                    <div class="tech-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon>
+                            <line x1="9" y1="3" x2="9" y2="18"></line>
+                            <line x1="15" y1="6" x2="15" y2="21"></line>
+                        </svg>
+                    </div>
                     <h3>B2G — Bio-Security Maps</h3>
                     <p>Geographic pathogen threat intelligence overlaid on supply chain nodes. PINN-derived shelf-life
                         forecasts feed government food safety dashboards at district granularity.</p>
@@ -208,10 +237,8 @@
             <p class="section-sub">Unlike data-only approaches, our PINN bakes the Arrhenius thermodynamic law directly
                 into its loss function — ensuring predictions respect physical reality, not just statistical
                 correlations.</p>
-            <div class="diagram-card full-width reveal">
-                <img src="diagrams/arrhenius_decay.png"
-                    alt="Arrhenius shelf-life decay curves at 5°C, 15°C, 25°C, 35°C with 120hr distress threshold"
-                    loading="lazy" />
+            <div class="diagram-card full-width reveal diagram-dynamic">
+                <canvas id="arrheniusDecayChart" class="canvas-max-400"></canvas>
             </div>
             <div class="formula-block reveal">
                 <div class="formula-label">Arrhenius Rate Constant</div>
@@ -229,10 +256,8 @@
             <h2 class="section-title">10-Year Economic Analysis</h2>
             <p class="section-sub">Our model converts Year-0 capital investment into strong cumulative profit by Year
                 3–4, while traditional models continue to bleed losses indefinitely.</p>
-            <div class="diagram-card full-width reveal">
-                <img src="diagrams/economic_analysis.png"
-                    alt="10-year comparative financial impact bar chart: Traditional (increasing losses) vs Kinexica (exponential profit after break-even)"
-                    loading="lazy" />
+            <div class="diagram-card full-width reveal diagram-dynamic">
+                <canvas id="economicChart" class="canvas-max-400"></canvas>
             </div>
             <div class="econ-highlights">
                 <div class="econ-stat reveal">
@@ -363,10 +388,8 @@
             <h2 class="section-title">$2.4 Trillion Opportunity</h2>
             <p class="section-sub">Kinexica targets five distinct verticals across B2B, B2C, and B2G segments.</p>
             <div class="market-layout">
-                <div class="diagram-card reveal">
-                    <img src="diagrams/market_opportunity.png"
-                        alt="Donut chart: B2B 40%, B2C 22%, B2G 18%, Aquaculture 12%, Carbon Credits 8%"
-                        loading="lazy" />
+                <div class="diagram-card reveal diagram-dynamic diagram-flex-center">
+                    <canvas id="marketChart" class="canvas-max-350"></canvas>
                 </div>
                 <div class="market-list">
                     <div class="market-item reveal">
@@ -467,6 +490,7 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
 </body>
 
