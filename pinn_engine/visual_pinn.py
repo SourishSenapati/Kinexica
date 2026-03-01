@@ -49,10 +49,26 @@ import cv2
 import numpy as np
 
 # ── CNN fusion (optional — activates automatically when pathogen_cnn.pth exists)
-_CNN_MODEL = None
-_CNN_X_MEAN = None
-_CNN_X_STD = None
-_CNN_LOADED = False
+# All torch / pathogen_cnn symbols are imported here at module level so that
+# pylint does not flag "import-outside-toplevel" inside the helper functions.
+try:
+    import torch                      # type: ignore[import]
+    import torch.nn.functional as _F  # type: ignore[import]
+    from pinn_engine.pathogen_cnn import (  # type: ignore[import]
+        PathogenCNN as _PathogenCNN,
+        MODEL_PATH as _CNN_MODEL_PATH,
+        NORM_PATH as _CNN_NORM_PATH,
+        FEATURE_KEYS as _FEATURE_KEYS,
+        CLASS_NAMES as _CLASS_NAMES,
+    )
+    _TORCH_AVAILABLE = True
+except ImportError:
+    _TORCH_AVAILABLE = False
+
+_CNN_MODEL:  Any = None
+_CNN_X_MEAN: Any = None
+_CNN_X_STD:  Any = None
+_CNN_LOADED:     bool = False
 
 
 def _try_load_cnn() -> None:
@@ -61,18 +77,18 @@ def _try_load_cnn() -> None:
     if _CNN_LOADED:
         return
     _CNN_LOADED = True
+    if not _TORCH_AVAILABLE:
+        return
     try:
-        import torch  # noqa
-        import torch.nn.functional as F  # noqa
-        from pinn_engine.pathogen_cnn import PathogenCNN, MODEL_PATH, NORM_PATH, FEATURE_KEYS  # noqa
-        if not (os.path.exists(MODEL_PATH) and os.path.exists(NORM_PATH)):
+        if not (os.path.exists(_CNN_MODEL_PATH)
+                and os.path.exists(_CNN_NORM_PATH)):
             return   # weights not trained yet — fall back to thresholds
-        model = PathogenCNN()
+        model = _PathogenCNN()
         model.load_state_dict(
-            torch.load(MODEL_PATH, map_location="cpu", weights_only=True)
+            torch.load(_CNN_MODEL_PATH, map_location="cpu", weights_only=True)
         )
         model.eval()
-        norms = np.load(NORM_PATH)
+        norms = np.load(_CNN_NORM_PATH)
         _CNN_MODEL = model
         _CNN_X_MEAN = norms["x_mean"]
         _CNN_X_STD = norms["x_std"]
@@ -83,33 +99,30 @@ def _try_load_cnn() -> None:
 def _cnn_classify(feats: dict) -> Optional[dict]:
     """
     Run PathogenCNN inference on the extracted feature vector.
-    Returns None if the model is not available.
+    Returns None if the model is unavailable.
     Returns dict: {class_id, class_name, confidence, is_pathogen, is_fraud, top3}
     """
     _try_load_cnn()
-    if _CNN_MODEL is None:
+    if _CNN_MODEL is None or not _TORCH_AVAILABLE:
         return None
     try:
-        import torch  # noqa
-        import torch.nn.functional as F  # noqa
-        from pinn_engine.pathogen_cnn import FEATURE_KEYS  # noqa
         x_raw = np.array(
-            [[feats.get(k, 0.0) for k in FEATURE_KEYS]], dtype=np.float32
+            [[feats.get(k, 0.0) for k in _FEATURE_KEYS]], dtype=np.float32
         )
         x_norm = (x_raw - _CNN_X_MEAN) / (_CNN_X_STD + 1e-8)
         x_t = torch.tensor(x_norm, dtype=torch.float32)
         with torch.no_grad():
             logits = _CNN_MODEL(x_t)
-            probs = F.softmax(logits, dim=1).numpy()[0]
+            probs = _F.softmax(logits, dim=1).numpy()[0]
         top_id = int(np.argmax(probs))
-        sorted3 = sorted(enumerate(probs),
-                         key=lambda kv: kv[1], reverse=True)[:3]
-        from pinn_engine.pathogen_cnn import CLASS_NAMES  # noqa
+        sorted3 = sorted(
+            enumerate(probs), key=lambda kv: kv[1], reverse=True
+        )[:3]
         return {
-            "class_id":   top_id,
-            "class_name": CLASS_NAMES[top_id],
-            "confidence": float(probs[top_id]),
-            "top3":       [(CLASS_NAMES[i], float(p)) for i, p in sorted3],
+            "class_id":    top_id,
+            "class_name":  _CLASS_NAMES[top_id],
+            "confidence":  float(probs[top_id]),
+            "top3":        [(_CLASS_NAMES[i], float(p)) for i, p in sorted3],
             "is_pathogen": top_id in (1, 2, 3, 4, 5, 6, 9),
             "is_fraud":    top_id == 7,
             "is_pristine": top_id in (0, 8),
@@ -552,7 +565,7 @@ def _build_recommended_action(
     pathogen_detected: bool,
     fraud_detected: bool,
     p_severity: str,
-    f_severity: str,
+    _f_severity: str,
     species: list,
     fraud_types: list,
 ) -> str:
@@ -779,12 +792,13 @@ def analyze_lesion_kinetics(
     )
 
     # Build output dict and inject CNN fields
-    out = result.to_dict()
-    out["cnn_available"] = result.__dict__.get("cnn_available", False)
-    out["cnn_class_name"] = result.__dict__.get("cnn_class_name")
-    out["cnn_confidence"] = result.__dict__.get("cnn_confidence")
-    out["cnn_top3"] = result.__dict__.get("cnn_top3", [])
-    return out
+    analysis_out = result.to_dict()
+    analysis_out["cnn_available"] = result.__dict__.get(
+        "cnn_available",  False)
+    analysis_out["cnn_class_name"] = result.__dict__.get("cnn_class_name")
+    analysis_out["cnn_confidence"] = result.__dict__.get("cnn_confidence")
+    analysis_out["cnn_top3"] = result.__dict__.get("cnn_top3",        [])
+    return analysis_out
 
 
 # ─────────────────────────────────────────────────────────────────────────────

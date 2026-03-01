@@ -279,7 +279,8 @@ def diagram_architecture():
 
     boxes = [
         (0.06, 0.5, BLUE,   "SENSORS\n────────\nTemp · Humidity\nEthylene · CV Vision"),
-        (0.27, 0.5, PURPLE, "PINN ENGINE\n────────────\nArrhenius Physics\nNeural Inference (5→128→64→2)"),
+        (0.27, 0.5, PURPLE,
+         "PINN ENGINE\n────────────\nArrhenius Physics\nNeural Inference (5→128→64→2)"),
         (0.50, 0.5, GREEN,  "PREDICTIONS\n────────────\nShelf Life (hrs)\nPIDR · Status"),
         (0.72, 0.5, AMBER,  "AI BROKER\n────────────\nSwarm Negotiation\nAuto-Liquidation"),
         (0.92, 0.5, "#06b6d4", "BLOCKCHAIN\n────────────\nWeb3 Settlement\nSynthi-ID Stamp"),

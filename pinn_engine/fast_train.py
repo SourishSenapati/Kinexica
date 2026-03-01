@@ -16,14 +16,15 @@ import signal
 import sys
 import time
 
-import numpy as np
-import pandas as pd
-import torch
-from torch import nn
-from torch.utils.data import DataLoader, TensorDataset
-
+# Insert project root so pinn_engine.train_pinn can be found when run directly
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from pinn_engine.train_pinn import PINNModel  # noqa: E402  (must follow sys.path insert)
+
+import numpy as np           # noqa: E402  (below sys.path insert by design)
+import pandas as pd          # noqa: E402
+import torch                  # noqa: E402
+from torch import nn          # noqa: E402
+from torch.utils.data import DataLoader, TensorDataset  # noqa: E402
+from pinn_engine.train_pinn import PINNModel  # noqa: E402
 
 # ── Constants ──────────────────────────────────────────────────────────────
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
