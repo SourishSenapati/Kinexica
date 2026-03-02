@@ -143,6 +143,7 @@ class LogisticsResult:
     timestamp:           float = 0.0
 
     def to_dict(self) -> dict:
+        """Convert result to a dictionary."""
         return {
             "asset_id":            self.asset_id,
             "origin":              self.origin.name,
@@ -271,7 +272,6 @@ def select_vehicle(mass_kg: float, remaining_h: float) -> str:
 def cost_model(
     road_km:       float,
     vehicle:       str,
-    mass_kg:       float,
     cold_chain:    bool = False,
     usd_to_inr:    float = 84.50,
 ) -> dict:
@@ -437,7 +437,7 @@ def plan_dispatch(
     result.vehicle_class = vehicle
 
     # ── Cost model ─────────────────────────────────────────────
-    costs = cost_model(road_km, vehicle, mass_kg, cold_chain, usd_to_inr)
+    costs = cost_model(road_km, vehicle, cold_chain, usd_to_inr)
     result.fuel_cost_inr = costs["fuel_inr"]
     result.driver_cost_inr = costs["driver_inr"]
     result.cold_chain_cost_inr = costs["cold_inr"]
@@ -484,7 +484,7 @@ def plan_multi_stop_dispatch(
 
     vehicle = select_vehicle(mass_kg, remaining_shelf_h)
     road_cls = infer_road_class(total_km / max(len(stops), 1))
-    costs = cost_model(total_km, vehicle, mass_kg, cold_chain, usd_to_inr)
+    costs = cost_model(total_km, vehicle, cold_chain, usd_to_inr)
     eta_min = compute_eta(total_km, road_cls)
     tier, sla = dispatch_tier_for(remaining_shelf_h)
     md = markdown_for(remaining_shelf_h)
@@ -549,7 +549,7 @@ if __name__ == "__main__":
     farm = GeoNode("farm1", "Nashik Tomato Farm", 19.9975, 73.7898, "farm")
     dest = nearest_node(farm, "cold_hub")
 
-    result = plan_dispatch(
+    disp_result = plan_dispatch(
         asset_id="Pallet-T8-Tomatoes",
         origin=farm,
         destination=dest,
@@ -559,4 +559,4 @@ if __name__ == "__main__":
         base_price_inr=125000.0,
         cold_chain=True,
     )
-    print(json.dumps(result.to_dict(), indent=2))
+    print(json.dumps(disp_result.to_dict(), indent=2))

@@ -141,7 +141,7 @@ def handle_carbon(payload: dict) -> str:
     return str(result)
 
 
-def handle_routing(payload: dict) -> str:
+def handle_routing(_payload: dict) -> str:
     """
     Dispatches a gig driver for distressed asset pickup.
     Triggers: Gig Routing Agent independently.

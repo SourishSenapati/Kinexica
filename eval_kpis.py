@@ -58,17 +58,29 @@ class _NumpyEncoder(json.JSONEncoder):
 
 
 def r2(y, p):
+    """Compute R^2."""
     ss_res = np.sum((y - p) ** 2)
     ss_tot = np.sum((y - np.mean(y)) ** 2)
     return float(1.0 - ss_res / (ss_tot + 1e-12))
 
 
-def rmse(y, p): return float(np.sqrt(np.mean((y - p) ** 2)))
-def mae(y, p): return float(np.mean(np.abs(y - p)))
-def mape(y, p): return float(np.mean(np.abs((y - p) / (y + 1e-9)))) * 100
+def rmse(y, p):
+    """Compute RMSE."""
+    return float(np.sqrt(np.mean((y - p) ** 2)))
+
+
+def mae(y, p):
+    """Compute MAE."""
+    return float(np.mean(np.abs(y - p)))
+
+
+def mape(y, p):
+    """Compute MAPE."""
+    return float(np.mean(np.abs((y - p) / (y + 1e-9)))) * 100
 
 
 def precision_recall_f1(y_true, y_pred):
+    """Compute precision, recall, f1, and other metrics."""
     tp = np.sum((y_true == 1) & (y_pred == 1))
     fp = np.sum((y_true == 0) & (y_pred == 1))
     fn = np.sum((y_true == 1) & (y_pred == 0))
@@ -93,13 +105,14 @@ def precision_recall_f1(y_true, y_pred):
 
 
 def sigma_bands(residuals):
-    σ = float(np.std(residuals))
+    """Compute the percentage of residuals within 1, 2, and 3 standard deviations."""
+    std_dev = float(np.std(residuals))
     return {
-        "sigma":    round(σ, 4),
-        "w1s_pct":  round(float(np.mean(np.abs(residuals) <= σ)) * 100, 2),
-        "w2s_pct":  round(float(np.mean(np.abs(residuals) <= 2 * σ)) * 100, 2),
-        "w3s_pct":  round(float(np.mean(np.abs(residuals) <= 3 * σ)) * 100, 2),
-        "gaussian_fit_ok": bool(float(np.mean(np.abs(residuals) <= 3 * σ)) > 0.99),
+        "sigma":    round(std_dev, 4),
+        "w1s_pct":  round(float(np.mean(np.abs(residuals) <= std_dev)) * 100, 2),
+        "w2s_pct":  round(float(np.mean(np.abs(residuals) <= 2 * std_dev)) * 100, 2),
+        "w3s_pct":  round(float(np.mean(np.abs(residuals) <= 3 * std_dev)) * 100, 2),
+        "gaussian_fit_ok": bool(float(np.mean(np.abs(residuals) <= 3 * std_dev)) > 0.99),
     }
 
 
@@ -180,7 +193,7 @@ def evaluate_pinn() -> dict:
     print(f"  Within 3σ   : {_sigs['w3s_pct']:.1f}%  (target ≥ 99.73%)")
     print(
         f"  Gaussian fit: {'✔  PASS' if _sigs['gaussian_fit_ok'] else '✗  FAIL'}")
-    print(f"\n  Distress Classifier (≥120h = Stable):")
+    print("\n  Distress Classifier (≥120h = Stable):")
     print(f"    Precision  : {clf_kpis['precision']:.4f}")
     print(f"    Recall     : {clf_kpis['recall']:.4f}")
     print(f"    F1         : {clf_kpis['f1']:.4f}")
@@ -227,14 +240,21 @@ def evaluate_visual_pinn() -> dict:
         base_ent = rng.uniform(5.5, 7.5) if is_path else rng.uniform(3.0, 5.0)
         feats = {
             "diffusion_var":   float(base_dv + rng.normal(0, 200)),
-            "mean_intensity":  float(rng.uniform(160, 200)) if is_fraud else float(rng.uniform(80, 150)),
+            "mean_intensity":  float(rng.uniform(160, 200)) if is_fraud else float(
+                rng.uniform(80, 150)),
             "entropy":         float(base_ent + rng.normal(0, 0.3)),
-            "edge_density":    float(rng.uniform(0.20, 0.35)) if is_fraud else float(rng.uniform(0.05, 0.15)),
-            "dominant_hue":    float(rng.uniform(30, 60)) if is_fraud else float(rng.uniform(10, 25)),
-            "mean_saturation": float(rng.uniform(50, 80)) if is_fraud else float(rng.uniform(130, 200)),
-            "contour_count":   int(rng.integers(3, 8)) if is_path else int(rng.integers(0, 2)),
-            "lesion_area_pct": float(rng.uniform(15, 50)) if is_path else float(rng.uniform(0, 8)),
-            "spore_score":     float(rng.uniform(2.0, 5.0)) if is_path else float(rng.uniform(0, 1.5)),
+            "edge_density":    float(rng.uniform(0.20, 0.35)) if is_fraud else float(
+                rng.uniform(0.05, 0.15)),
+            "dominant_hue":    float(rng.uniform(30, 60)) if is_fraud else float(
+                rng.uniform(10, 25)),
+            "mean_saturation": float(rng.uniform(50, 80)) if is_fraud else float(
+                rng.uniform(130, 200)),
+            "contour_count":   int(rng.integers(3, 8)) if is_path else int(
+                rng.integers(0, 2)),
+            "lesion_area_pct": float(rng.uniform(15, 50)) if is_path else float(
+                rng.uniform(0, 8)),
+            "spore_score":     float(rng.uniform(2.0, 5.0)) if is_path else float(
+                rng.uniform(0, 1.5)),
         }
 
         p_det, _, _, _, _ = _classify_pathogen(feats, arch, 1)
@@ -336,6 +356,7 @@ def evaluate_arrhenius_baseline() -> dict:
 # ── AGGREGATE REPORT ────────────────────────────────────────────────────────
 
 def run_all(export: bool = False) -> dict:
+    """Run all models and aggregate KPIs."""
     print("\n" + "═" * 55)
     print("  KINEXICA — UNIFIED KPI EVALUATION REPORT")
     print("═" * 55)
@@ -360,7 +381,7 @@ def run_all(export: bool = False) -> dict:
 
     if "distress_classifier" in pinn_kpis:
         clf = pinn_kpis["distress_classifier"]
-        print(f"\n  PINN Distress Alarm KPIs:")
+        print("\n  PINN Distress Alarm KPIs:")
         print(f"    Precision : {clf['precision']:.4f}  (false-alarm cost)")
         print(f"    Recall    : {clf['recall']:.4f}  (spoilage catch rate)")
         print(f"    F1        : {clf['f1']:.4f}")
@@ -368,7 +389,7 @@ def run_all(export: bool = False) -> dict:
     if "pathogen_detector" in vis_kpis:
         pk = vis_kpis["pathogen_detector"]
         fk = vis_kpis["fraud_detector"]
-        print(f"\n  Visual-PINN KPIs (synthetic 500-sample benchmark):")
+        print("\n  Visual-PINN KPIs (synthetic 500-sample benchmark):")
         print(
             f"    Pathogen F1 :  {pk['f1']:.4f}   Accuracy: {pk['accuracy']*100:.1f}%")
         print(
@@ -376,7 +397,7 @@ def run_all(export: bool = False) -> dict:
 
     if "sigma_analysis" in pinn_kpis:
         sg = pinn_kpis["sigma_analysis"]
-        print(f"\n  Gaussian Residual Fit (PINN):")
+        print("\n  Gaussian Residual Fit (PINN):")
         print(f"    σ = {sg['sigma']:.2f} hrs")
         print(f"    68.27% band: {sg['w1s_pct']:.1f}%  (1σ)")
         print(f"    95.45% band: {sg['w2s_pct']:.1f}%  (2σ)")

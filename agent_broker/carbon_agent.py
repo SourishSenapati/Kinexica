@@ -9,6 +9,7 @@ from crewai import Agent, Task, LLM
 
 
 def get_carbon_agent(llm: LLM) -> Agent:
+    """Get the Carbon Credit & MRV Agent."""
     return Agent(
         role="Carbon Credit & MRV Specialist",
         goal=(
@@ -28,18 +29,19 @@ def get_carbon_agent(llm: LLM) -> Agent:
 
 
 def get_carbon_task(agent: Agent, payload: dict) -> Task:
+    """Get the Carbon Credit task based on the payload."""
     kg_saved = payload.get("kg_saved", 0.0)
     asset_id = payload.get("asset_id", "unknown")
     commodity = payload.get("commodity", "produce")
     # WRAP UK: tomatoes ≈ 2.09 kgCO₂e/kg, avg mixed produce ≈ 1.8 kgCO₂e/kg
     emission_factor = payload.get("emission_factor_kgco2e_per_kg", 1.80)
-    credits = round(kg_saved * emission_factor / 1000, 6)   # tCO₂e
+    carbon_credits = round(kg_saved * emission_factor / 1000, 6)   # tCO₂e
 
     return Task(
         description=(
             f"Asset: {asset_id}  |  Commodity: {commodity}  |  "
             f"Kg Prevented: {kg_saved}  |  Emission Factor: {emission_factor} kgCO₂e/kg\n\n"
-            f"Estimated credits: {credits} tCO₂e (preliminary).\n\n"
+            f"Estimated credits: {carbon_credits} tCO₂e (preliminary).\n\n"
             "Tasks:\n"
             "1. Validate emissions factor against IPCC AR6 Table 7.SM.8 and WRAP food waste database.\n"
             "2. Produce a complete MRV record in structured JSON format:\n"
@@ -48,7 +50,8 @@ def get_carbon_task(agent: Agent, payload: dict) -> Task:
             "   - verification_status: 'Pending Blockchain Stamp'\n"
             "   - timestamp\n"
             "3. Flag if credits exceed 1 tCO₂e (Gold Standard minimum issuance threshold).\n"
-            "4. Recommend marketplace: Toucan Protocol, Moss.Earth, or KlimaDAO integration."
+            "4. Recommend marketplace: Toucan Protocol, Moss.Earth,"
+            " or KlimaDAO integration."
         ),
         expected_output=(
             "A structured MRV JSON record with tCO₂e credits, methodology citation, "
