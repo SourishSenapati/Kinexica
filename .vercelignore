@@ -1,0 +1,6 @@
+node_modules
+venv
+mobile
+__pycache__
+*.db
+.git
